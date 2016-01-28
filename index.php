@@ -13,6 +13,7 @@
 			Username: <input type="text" name="user"><br>
   			Password: <input type="text" name="password"><br>
   			<a id="loginbtn" href="homepage.php">Login</a>
+  			<a href="test.php">Test</a>
 		</div>
 	</body>
 	
