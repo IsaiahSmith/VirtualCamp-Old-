@@ -10,10 +10,29 @@
 		<div id="header">Virtual<span id="title">Camp</span></div>
 		<div id="login">
 			<h2>Welcome to My<span id="title">Camp</span></h2>
-			Username: <input type="text" name="user"><br>
-  			Password: <input type="text" name="password"><br>
-  			<a id="loginbtn" href="/attendance" method="get">Login</a>
+			<form action="login" method=post enctype=multipart/form-data>
+			Username: <input id="usernameInput" type="text" name="username"><br>
+  			Password: <input id="passwordInput" type="text" name="password"><br>
+  			<!-- <button id="loginbtn" onclick="attemptLogin();">Login</button> -->
+  			<input type=submit value=Login>
+  			</form>
+			
+<!-- 				<p><input type="text" class="form-control" id="titleInput" placeholder="Title" name="title">
+				   </p> -->
+			
+
+
 		</div>
 	</body>
+
+<script>
+function attemptLogin() {
+	var username = document.getElementById("usernameInput").value;
+	var password = document.getElementById("passwordInput").value;
+
+	"/login" post
+
+}
+</script>
 	
 </html>

@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, url_for
+from flask import Flask, redirect, render_template, url_for, request
 import pymssql
 app = Flask(__name__)
 
@@ -17,14 +17,24 @@ cursor = conn.cursor(as_dict=True)
 
 @app.route("/")
 def index():
-    print "get index"
     return redirect("/login")
 
 
-@app.route("/login")
+@app.route("/login", methods=['GET', 'POST'])
 def login_user():
-    print "get login"
-    return render_template("login.html")
+    if(request.method == 'POST'):
+        # check db to see if it's valid
+        username = request.form['username']
+        password = request.form['password']
+        print username, password
+        cursor.execute("EXEC AttemptLogin @username = " + username + ", @password = " + password)
+        results = cursor.fetchall()
+        print "login results:", results
+        if results == []:
+            return redirect("/attendance")
+    else:
+        return render_template("login.html")
+    
 
 
 @app.route("/attendance")
