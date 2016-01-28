@@ -45,3 +45,13 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# User added:
+# credentials file shouldn't go on GitHub
+flask_code/credentials.txt
+# don't need compiled py files
+flask_code/*.pyc
+# I forget what this one is
+.project
+# i think this is a file that is created when working with python in Eclipse, that we don't all need to have
+.pydevproject
