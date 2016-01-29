@@ -27,11 +27,11 @@ def login_user():
         username = request.form['username']
         password = request.form['password']
         print username, password
-        cursor.execute("EXEC AttemptLogin @username = " + username + ", @password = " + password)
-        results = cursor.fetchall()
-        print "login results:", results
-        if results == []:
-            return redirect("/attendance")
+        # cursor.execute("EXEC AttemptLogin @username = " + username + ", @password = " + password)
+        # results = cursor.fetchall()
+        # print "login results:", results
+        # if results == []:
+        return redirect("/attendance")
     else:
         return render_template("login.html")
     
