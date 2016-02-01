@@ -1,5 +1,5 @@
 #header		{width: 100%;
-			background-color: black;
+			background-color: blue;
 			color: white;
 			font-size: 28pt;
 			font-family: Consolas, Cooper Black, Berlin;}
@@ -7,7 +7,7 @@
 #logout		{text-align: right;
 			font-size: 11pt;}
 			
-#title		{color: red;
+#title		{color: white;
 			font-size: 32pt;
 			font-family: Batang, Century, Times;}
 
@@ -51,9 +51,10 @@ hr#right	{text-align:right;
 			
 h2			{text-align: center;}
 
-a			{text-decoration: none;}
+a			{text-decoration: none;
+			color: black;}
 
-#login		{margin: 70%;
+#loginContain		{margin: 70%;
 			border: solid black 2px;
 			border-radius: 10px;
 			width: 20%;
@@ -66,6 +67,6 @@ a			{text-decoration: none;}
 			border-radius: 4px;
 			padding: 3px;}
 
-#index		{background-image: url('kids-having-fun.jpg');}
+#loginPage		{background-image: url('kids-having-fun.jpg');}
 
 

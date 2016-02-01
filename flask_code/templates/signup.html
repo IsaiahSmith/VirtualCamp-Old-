@@ -23,19 +23,19 @@
 				
 				<td>
 					<div id="loginContain">
-						<h2>Log in</h2>
+						<h2>Sign up for Virtual Camp</h2>
 						<hr />
 						<br />
-						<form action="login" method=post enctype=multipart/form-data>
+						<form action="register" method=post enctype=multipart/form-data>
 							<input id="usernameInput" type="text" name="username" placeholder="username" /><br />
-				  			<input id="passwordInput" type="text" name="password" placeholder="password" /><br /><br />
+				  			<input id="passwordInput" type="text" name="password" placeholder="password" /><br />
+				  			<input id="confPasswordInput" type="text" name="confPassword" placeholder="confirm password" /><br />
+				  			<input id="fname" type="text" name="fname" placeholder="First Name" /><br />
+				  			<input id="lname" type="text" name="lname" placeholder="Last Name" /><br />
+				  			<input id="code" type="text" name="code" placeholder="Camp Code" /><br />
 				  			<!-- <button id="loginbtn" onclick="attemptLogin();">Login</button> -->
-				  			<input type="submit" value="Sign in" />
+				  			<input type="submit" value="Sign up" />
 			  			</form>
-			  			
-			  			<p>or</p>
-			  			
-			  			<button id="signUp" type="button" onclick="location.href='signup'">Sign up</button>
 						
 							<!-- <p><input type="text" class="form-control" id="titleInput" placeholder="Title" name="title">
 							   </p> -->
@@ -47,11 +47,8 @@
 	</body>
 
 	<script>
-	function attemptLogin() {
-		var username = document.getElementById("usernameInput").value;
-		var password = document.getElementById("passwordInput").value;
-	
-		"/login" post
+	function attemptRegister() {
+		
 	}
 	</script>
 	

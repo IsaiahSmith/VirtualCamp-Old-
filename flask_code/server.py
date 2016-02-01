@@ -8,7 +8,7 @@ server = credential_file.readline().strip()
 username = credential_file.readline().strip()
 password = credential_file.readline().strip()
 dbname = credential_file.readline().strip()
-print server, username, password, dbname
+print server, dbname
 
 # connect to the Micosoft SQL server
 conn = pymssql.connect(server, username, password, dbname)
@@ -43,6 +43,21 @@ def attendance_page():
     results = cursor.fetchall()
     return render_template("attendance.html", attendance=results)
 
+@app.route("/signup")
+def signup_page():
+    return render_template("signup.html")
+
+@app.route("/about")
+def about_page():
+    return render_template("about.html")
+
+@app.route("/contact")
+def contact_page():
+    return render_template("contact.html")
+
+@app.route("/schedule")
+def schedule_page():
+    return render_template("schedule.html")
 
 if __name__ == "__main__":
     app.debug = True # TODO: remove for production
