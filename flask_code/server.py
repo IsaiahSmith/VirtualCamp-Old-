@@ -61,8 +61,20 @@ def schedule_page():
 
 @app.route("/upload")
 def upload_page():
-    return render_template("upload.html")
+    if request.method == 'POST':
+        upload_file = request.files['file']
+        if upload_file and allowed_file(upload_file.filename):
+            print "we got a file!  what type is it?", type(upload_file), "and can we open it?", open(upload_file, 'r'))
+            
+            return "file uploaded successfully :)" # a message for the javascript callback
+    else: # it is a get request, return the webpage after rendering it
+        return render_template("upload.html")
 
+
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1] == 'csv'
 
 if __name__ == "__main__":
     app.debug = True # TODO: remove for production
