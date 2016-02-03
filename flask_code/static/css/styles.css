@@ -1,28 +1,36 @@
+body		{font-family: "Toms Handwriting", Cooper Black, Berlin;}
+
 #header		{width: 100%;
-			background-color: blue;
-			color: white;
-			font-size: 28pt;
-			font-family: Consolas, Cooper Black, Berlin;}
+			height: 100px;
+			padding-top: 25px;
+			background-color: green;
+			color: white;}
+
+#headerList	{margin-left: 10px;
+			padding-top: 0;
+			margin-bottom: 5px;}
 			
-#logout		{text-align: right;
-			font-size: 11pt;}
+li.headerLi	{list-style-type: none;
+			display: inline;}
 			
-#title		{color: white;
+#logo		{font-size: 28pt;}
+			
+#camp		{color: white;
 			font-size: 32pt;
 			font-family: Batang, Century, Times;}
 
-body		{font-family: Consolas, Cooper Black, Berlin;}
+#logout		{text-align: right;
+			font-size: 11pt;}
 
-h1			{text-align: center;}
-
-table		{width: 80%;
-			margin: 0 auto;}
+table.bodyTable		{width: 80%;
+					margin: 0 auto;}
 
 hr			{width: 150px;
 			margin: 0;}
 			
 ul			{list-style-type: none;
 			padding: 0;}
+			
 
 #todayAttendance	{width: 33%;}
 

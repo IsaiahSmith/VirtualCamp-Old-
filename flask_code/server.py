@@ -58,9 +58,12 @@ def contact_page():
 @app.route("/schedule")
 def schedule_page():
     return render_template("schedule.html")
+
 @app.route("/upload")
 def upload_page():
-    
+    return render_template("upload.html")
+
+
 if __name__ == "__main__":
     app.debug = True # TODO: remove for production
     app.run(threaded=True)
