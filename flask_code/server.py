@@ -59,12 +59,16 @@ def contact_page():
 def schedule_page():
     return render_template("schedule.html")
 
+@app.route("/settings")
+def settings_page():
+    return render_template("settings.html")
+
 @app.route("/upload")
 def upload_page():
     if request.method == 'POST':
         upload_file = request.files['file']
         if upload_file and allowed_file(upload_file.filename):
-            print "we got a file!  what type is it?", type(upload_file), "and can we open it?", open(upload_file, 'r'))
+            print "we got a file!  what type is it?", type(upload_file), "and can we open it?", open(upload_file, 'r')
             
             return "file uploaded successfully :)" # a message for the javascript callback
     else: # it is a get request, return the webpage after rendering it

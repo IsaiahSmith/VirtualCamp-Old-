@@ -6,7 +6,7 @@
 		<link href="{{ url_for('static', filename='css/styles.css') }}" type="text/css" rel="stylesheet" />
 	</head>
 
-	<body id="loginPage">
+	<body>
 		<div id="header">
 			<ul id="headerList">
 				<li class="headerLi"><span id="logo"><a href="login">Virtual<span id="camp">Camp</span></a></span></li>
@@ -15,9 +15,25 @@
 			</ul>
 		</div>
 		
-		About Virtual Camp:
+		<table class="bodyTable">
+			<tr>
+				<td>
+					<ul id="navList">
+						<li><a href="attendance">Home</a></li>
+						<li><a href="schedule">Work Schedule</a></li>
+						<li><a href="upload">Upload</a></li>
+						<li><a href="settings">Settings</a></li>
+					</ul>
+				</td>
+				
+				<td>
+					About Virtual Camp:
 		
-		We are awesome
+					We are awesome
+		
+				</td>
+			</tr>
+		</table>
 		
 	</body>
 </html>
