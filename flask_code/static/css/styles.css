@@ -48,15 +48,6 @@ ul			{list-style-type: none;
 hr#right	{text-align:right;
 			margin-left: 365px;}
 
-#footer		{width: 100%;
-			background-color: black;
-			color: white;
-			font-size: 18pt;
-			text-align: center;
-			font-family: Consolas, Cooper Black, Berlin;
-			position: fixed;
-			bottom: 2px;}
-			
 h2			{text-align: center;}
 
 a			{text-decoration: none;
@@ -77,4 +68,12 @@ a			{text-decoration: none;
 
 #loginPage		{background-image: url('kids-having-fun.jpg');}
 
-
+#footer		{width: 100%;
+			background-color: green;
+			color: white;
+			font-size: 18pt;
+			text-align: center;
+			font-family: Consolas, Cooper Black, Berlin;
+			position: fixed;
+			bottom: 2px;}
+			
