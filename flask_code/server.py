@@ -1,5 +1,6 @@
 from flask import Flask, redirect, render_template, url_for, request
 import pymssql
+import csv
 app = Flask(__name__)
 
 # get SQL Server credentials. 
@@ -65,7 +66,13 @@ def upload_page():
         upload_file = request.files['file']
         if upload_file and allowed_file(upload_file.filename):
             print "we got a file!  what type is it?", type(upload_file), "and can we open it?", open(upload_file, 'r'))
-            
+            csv_f = csvreader(upload_file)
+            for row in csv_f:
+                fname = row[0]
+                lname = row[1]
+                tribe = row[2]
+                cursor.execute("EXEC UploadUser @fname = " + fname + ", @lname = "+ lname + ", @tribe = "+ tribe)
+
             return "file uploaded successfully :)" # a message for the javascript callback
     else: # it is a get request, return the webpage after rendering it
         return render_template("upload.html")
