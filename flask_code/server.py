@@ -60,6 +60,10 @@ def contact_page():
 def schedule_page():
     return render_template("schedule.html")
 
+@app.route("/settings")
+def settings_page():
+    return render_template("settings.html")
+
 @app.route("/upload")
 def upload_page():
     if request.method == 'POST':
@@ -72,7 +76,7 @@ def upload_page():
                 lname = row[1]
                 tribe = row[2]
                 cursor.execute("EXEC UploadUser @fname = " + fname + ", @lname = "+ lname + ", @tribe = "+ tribe)
-
+            print "we got a file!  what type is it?", type(upload_file), "and can we open it?", open(upload_file, 'r')
             return "file uploaded successfully :)" # a message for the javascript callback
     else: # it is a get request, return the webpage after rendering it
         return render_template("upload.html")
