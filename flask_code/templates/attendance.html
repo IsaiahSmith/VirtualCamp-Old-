@@ -21,10 +21,9 @@
 			<tr>
 				<td>
 					<ul id="navList">
-						<li><a href="attendance">Home</a></li>
-						<li><a href="schedule">Work Schedule</a></li>
-						<li><a href="upload">Upload</a></li>
-						<li><a href="settings">Settings</a></li>
+						<li class="navItem"><a href="attendance">Home</a></li>
+						<li class="navItem"><a href="schedule">Work Schedule</a></li>
+						<li class="navItem"><a href="">[Insert Next Nav Item]</a></li>
 					</ul>
 				</td>
 				
@@ -35,8 +34,7 @@
 						{% for row in attendance %}
 						<li>{{row["First Name"]}} {{row["Last Name"]}} {{row["Tribe"]}}</li>
 						{% endfor %}
-						<li class="notHere" style="display: none;"></li>
-						<li onclick="displayAdd" hid>add</li>
+						
 					</ul>
 				</td>
 				<td>
@@ -49,12 +47,6 @@
 			[Copyright info] [other junk]<span id="logout">Logout</span>
 		</div>
 	</body>
-	
-	<script>
-	function displayAdd() {
-		
-	}
-	</script>
 
 </html>
 				
