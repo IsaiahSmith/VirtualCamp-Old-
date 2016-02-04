@@ -9,7 +9,7 @@ server = credential_file.readline().strip()
 username = credential_file.readline().strip()
 password = credential_file.readline().strip()
 dbname = credential_file.readline().strip()
-print server, dbname
+print "db server:", server, "db name:", dbname
 
 # connect to the Micosoft SQL server
 conn = pymssql.connect(server, username, password, dbname)
@@ -65,7 +65,7 @@ def upload_page():
     if request.method == 'POST':
         upload_file = request.files['file']
         if upload_file and allowed_file(upload_file.filename):
-            print "we got a file!  what type is it?", type(upload_file), "and can we open it?", open(upload_file, 'r'))
+            print "we got a file!  what type is it?", type(upload_file), "and can we open it?", open(upload_file, 'r')
             csv_f = csvreader(upload_file)
             for row in csv_f:
                 fname = row[0]
