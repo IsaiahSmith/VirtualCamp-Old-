@@ -4,43 +4,69 @@
 		<meta charset="utf-8">
 		<title>VirtualCamp</title>
 		<link href="{{ url_for('static', filename='css/styles.css') }}" type="text/css" rel="stylesheet" />
+		<script src="http://code.jquery.com/jquery-2.1.4.js"></script>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
 	</head>
 
 	<body>
-		<div id="header">
-			<ul id="headerList">
-				<li class="headerLi"><span id="logo"><a href="login">Virtual<span id="camp">Camp</span></a></span></li>
-				<li class="headerLi">|</li>
-				<li class="headerLi">Shelbyville Parks Dept. Day Camp</li>
-				<li class="headerLi"><a href="about">About</a></li>
-				<li class="headerLi"><a href="contact">Contact Us</a></li>
-			</ul>
+		<div class="row" id="header">
+			<div class="col-md-1"></div>
+			<div class="col-md-4"><span id="logo"><a href="attendance">Virtual<span id="camp">Camp</span></a></span></div>
+			<div class="col-md-1"></div>
+			<div class="col-md-2">Shelbyville Parks Dept. Day Camp</div>
+			<div class="col-md-1"></div>
+			<div class="col-md-3"><a href="about">About</a>
+				|
+			<a href="contact">Contact Us</a></div>
 		</div>
 		
-		<table class="bodyTable">
-			<tr>
-				<td>
-					<ul id="navList">
-						<li><a href="attendance">Home</a></li>
-						<li><a href="schedule">Work Schedule</a></li>
-						<li><a href="upload">Upload</a></li>
-						<li><a href="settings">Settings</a></li>
-					</ul>
-				</td>
-				
-				<td>
-					choose file to upload
-				</td>
-			</tr>
-		</table>
+		<div class="row" style="height: 15px;"></div>
+		
+		<div class="row">
+			<div class="col-md-2" id="navList">
+				<ul>
+					<li class="navItem"><a class="navClick" href="attendance">Home</a></li>
+					<li class="navItem"><a class="navClick" href="schedule">Work Schedule</a></li>
+					<li class="navItem"><a class="navClick" href="upload">Upload</a></li>
+					<li class="navItem"><a class="navClick" href="settings">Settings</a></li>
+				</ul>
+			</div>
+			<div class="col-md-8">
+				<form action="upload" method="post" enctype="multipart/form-data">
+					choose file to upload:
+					<input type="file" name="fileToUpload" id="fileToUpload">
+					<button onclick="attemptUpload();">Upload File</button>
+				</form>
+			</div>
+		</div>
 
-		<div id="footer">
-			[Copyright info] [other junk]<span id="logout">Logout</span>
+		<div class="row" id="footer">
+			<div class="col-md">[Copyright info] [other junk]<a id="logout">Logout</a></div>
 		</div>
 	</body>
 	
 	<script>
-	
+	function attemptUpload() {
+		var file = document.getElementById("fileToUpload").files[0];
+		var formData = new FormData();
+		formData.append("file", file);
+		console.log("made it this far");
+		
+		$.ajax({
+			type: "POST",
+			url : "/upload",
+			data: formData,
+			contentType : false,
+			processData : false,
+			success: function(result){
+				console.log(result);
+			}
+		});
+	}
 	</script>
 
 </html>

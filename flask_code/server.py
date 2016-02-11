@@ -64,10 +64,10 @@ def schedule_page():
 def settings_page():
     return render_template("settings.html")
 
-@app.route("/upload")
+@app.route("/upload", methods=['GET', 'POST'])
 def upload_page():
     if request.method == 'POST':
-        upload_file = request.files['file']
+        upload_file = request.files.get('file', default=None)
         if upload_file and allowed_file(upload_file.filename):
             print "we got a file!  what type is it?", type(upload_file), "and can we open it?", open(upload_file, 'r')
             csv_f = csvreader(upload_file)
@@ -76,8 +76,9 @@ def upload_page():
                 lname = row[1]
                 tribe = row[2]
                 cursor.execute("EXEC UploadUser @fname = " + fname + ", @lname = "+ lname + ", @tribe = "+ tribe)
-            print "we got a file!  what type is it?", type(upload_file), "and can we open it?", open(upload_file, 'r')
+            print "we got a file!  what type is it? ", type(upload_file), " and can we open it?", open(upload_file, 'r')
             return "file uploaded successfully :)" # a message for the javascript callback
+        return "failed!!"
     else: # it is a get request, return the webpage after rendering it
         return render_template("upload.html")
 

@@ -1,14 +1,32 @@
 body		{font-family: "Toms Handwriting", Cooper Black, Berlin;}
 
-#header		{width: 100%;
-			height: 100px;
+a			{color: black;}
+
+a:hover		{color: black;
+			text-decoration: none;}
+
+#template	{margin-left: 25px;}
+
+#header		{height: 100px;
 			padding-top: 25px;
 			background-color: green;
 			color: white;}
+			
 
-#headerList	{margin-left: 10px;
-			padding-top: 0;
-			margin-bottom: 5px;}
+			
+#navList	{border-right: solid green 1px;
+			padding-left: 30px;}
+			
+.navItem	{border-bottom: solid green 1px;
+			padding: 26px;
+			color: green;
+			font-size: 20px;}
+	
+.navClick	{color: black;
+			text-decoration: none;}
+			
+.navClick:hover	{color: green;
+				text-decoration: none;}
 			
 li.headerLi	{list-style-type: none;
 			display: inline;}
@@ -34,13 +52,6 @@ ul			{list-style-type: none;
 
 #todayAttendance	{width: 33%;}
 
-#activites	{width: 33%;
-			padding: 0;
-			color: white;
-			background-color: black;
-			border: solid red 3px;
-			border-radius: 15px;
-			text-align: center;}
 
 #links		{width: 34%;
 			text-align: right;}
@@ -53,20 +64,13 @@ h2			{text-align: center;}
 a			{text-decoration: none;
 			color: black;}
 
-#loginContain		{margin: 70%;
-			border: solid black 2px;
-			border-radius: 10px;
-			width: 20%;
-			padding: 9px;
-			margin-top: 100px;
-			background-color: white;
-			background-repeat: no-repeat;}
+#loginContain		{border: solid black;
+					border-radius: 10px;
+					background-color: white;}
 			
 #loginbtn	{background-color: #D3D3D3;
 			border-radius: 4px;
 			padding: 3px;}
-
-#loginPage		{background-image: url('kids-having-fun.jpg');}
 
 #footer		{width: 100%;
 			background-color: green;
@@ -74,6 +78,6 @@ a			{text-decoration: none;
 			font-size: 18pt;
 			text-align: center;
 			font-family: Consolas, Cooper Black, Berlin;
-			position: fixed;
-			bottom: 2px;}
+			/*position: fixed;
+			bottom: 0px;*/}
 			
