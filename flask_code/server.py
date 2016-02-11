@@ -58,18 +58,14 @@ def attendance_page():
         tribe = camperArr[1]
         id = camperArr[2]
         date = datetime.datetime.today();
-        cursor.execute("EXEC InsertAttending @date ='"+str(date)+"', @fname ='"+fname+"', @lname ='"+lname+"', @id ='"+id+"'")
+        cursor.execute("EXEC InsertAttending @date ='"+str(date)+"', @id ='"+id+"'")
         conn.commit();
         return fname + " " +lname + ", " + tribe
     else:
         cursor.execute("EXEC GetTodaysAttendance")
         results = cursor.fetchall();
-        cursor.execute("EXEC GetAllCampers");
+        cursor.execute("EXEC GetNotHereToday");
         answer = cursor.fetchall();
-        for camper in answer:
-            for here in results:
-                if camper["ID"] == here["ID"]:
-                    answer.remove(camper);
         number = len(results);
         return render_template("attendance.html", attendance=results, notHereYet=answer, count=number)
 
@@ -77,10 +73,15 @@ def attendance_page():
 def setAttendance_page():
     if request.method == 'POST':
         list = request.form['list']
-        print list
-    cursor.execute("EXEC GetAllCampers");
-    results = cursor.fetchall();
-    return render_template("setAttendance.html", list=results)
+        split = list.split(",");
+        date = datetime.datetime.today();
+        for id in split:
+            cursor.execute("EXEC InsertAttending @date ='"+str(date)+"', @id ='"+id+"'")
+        return redirect("/attendance")
+    else:
+        cursor.execute("EXEC GetNotHereToday");
+        results = cursor.fetchall();
+        return render_template("setAttendance.html", list=results)
 
 @app.route("/about")
 def about_page():
