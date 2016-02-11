@@ -34,11 +34,17 @@
 				</ul>
 			</div>
 			<div class="col-md-8" id="body">
-				<!-- <form action="upload" method="post" enctype="multipart/form-data"> -->
-					<input type="file" name="fileToUpload" id="fileToUpload">
-					<button onclick="attemptUpload();">Upload File</button>
-					<p id="messageBox"></p>
-				<!-- </form> -->
+				<h1>Upload a .csv File</h1>
+				<h1><small>Make sure the format is <i>FirstName-LastName-Tribe</i></small></h1>
+				
+				<br />
+				
+				<input type="file" name="fileToUpload" id="fileToUpload">
+				
+				<br />
+				
+				<button onclick="attemptUpload();">Upload File</button>
+				<h3 id="messageBox"></h3>
 			</div>
 		</div>
 	</body>
@@ -59,6 +65,9 @@
 			success: function(result){
 				document.getElementById("messageBox").innerHTML = result;
 				document.getElementById("fileToUpload").value = "";
+				setTimeout(function(){
+				    document.getElementById("messageBox").innerHTML = "";
+				}, 2000);
 			}
 		});
 	}

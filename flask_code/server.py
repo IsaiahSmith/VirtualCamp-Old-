@@ -42,15 +42,35 @@ def login_user():
 
 @app.route("/attendance", methods=['GET', 'POST'])
 def attendance_page():
-    cursor.execute("EXEC GetTodaysAttendance")
-    results = cursor.fetchall();
-    cursor.execute("EXEC GetAllCampers")
-    answer = cursor.fetchall();
-    number = len(results);
-    return render_template("attendance.html", attendance=results, notHereYet=answer, count=number)
+    if request.method == 'POST':
+        camper = request.form['string']
+        camperArr = camper.split(", ")
+        nameArr = camperArr[0].split(" ")
+        fname = nameArr[0]
+        lname = nameArr[1]
+        tribe = camperArr[1]
+        id = camperArr[2]
+        date = datetime.datetime.today();
+        cursor.execute("EXEC InsertAttending @date ='"+str(date)+"', @fname ='"+fname+"', @lname ='"+lname+"', @id ='"+id+"'")
+        conn.commit();
+        return fname + " " +lname + ", " + tribe
+    else:
+        cursor.execute("EXEC GetTodaysAttendance")
+        results = cursor.fetchall();
+        cursor.execute("EXEC GetAllCampers");
+        answer = cursor.fetchall();
+        for camper in answer:
+            for here in results:
+                if camper["ID"] == here["ID"]:
+                    answer.remove(camper);
+        number = len(results);
+        return render_template("attendance.html", attendance=results, notHereYet=answer, count=number)
 
 @app.route("/setAttendance", methods=['GET', 'POST'])
 def setAttendance_page():
+    if request.method == 'POST':
+        list = request.form['list']
+        print list
     cursor.execute("EXEC GetAllCampers");
     results = cursor.fetchall();
     return render_template("setAttendance.html", list=results)
@@ -105,8 +125,8 @@ def upload_page():
                 cursor.execute(query)
             print "all done, committing"
             conn.commit()
-            return "File uploaded successfully :)" # a message for the javascript callback
-        return "Oops! Something went wrong :("
+            return "File uploaded successfully!" # a message for the javascript callback
+        return "Oops! Something went wrong :( Try again"
     else: # it is a get request, return the webpage after rendering it
         return render_template("upload.html")
 

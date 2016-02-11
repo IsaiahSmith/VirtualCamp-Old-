@@ -56,13 +56,27 @@
 			for(i = 0; i < rows.length; i++){
 				if(document.getElementById(rows[i].id+'i').checked){
 					console.log(rows[i].id);
-					adding.push(document.getElementById(rows[i].id+'label').textContent + ', ' + rows[i].id);			
+					adding.push(document.getElementById(rows[i].id+'label').textContent + ', ' + rows[i].id+"@@");			
 				}
 			}
-			console.log(adding);
+			var formData = new FormData();
+			formData.append("list", adding);
 			
-			//do the stuff where you push things in attendance
-			// redirect page
+			$.ajax({
+				type: "POST",
+				url : "/setAttendance",
+				data: formData,
+				contentType : false,
+				processData : false,
+				success: function(result){
+						var count = document.getElementById("count").innerHTML;
+						document.getElementById("count").innerHTML = parseInt(count) + 1;
+						var ul = document.getElementById("todAttend");
+						var li = document.createElement("li");
+						li.innerHTML = result;
+						ul.appendChild(li);
+					}
+			});
 		}
 	</script>
 
