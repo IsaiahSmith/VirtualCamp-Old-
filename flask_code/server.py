@@ -93,16 +93,20 @@ def upload_page():
     if request.method == 'POST':
         upload_file = request.files.get('file', default=None)
         if upload_file and allowed_file(upload_file.filename):
-            print "we got a file!  what type is it?", type(upload_file), "and can we open it?", open(upload_file, 'r')
-            csv_f = csvreader(upload_file)
-            for row in csv_f:
+            print "we got a file!", dir(upload_file)
+            for row in upload_file:
+                row = row.split(',')
                 fname = row[0]
                 lname = row[1]
                 tribe = row[2]
-                cursor.execute("EXEC UploadUser @fname = " + fname + ", @lname = "+ lname + ", @tribe = "+ tribe)
-            print "we got a file!  what type is it? ", type(upload_file), " and can we open it?", open(upload_file, 'r')
-            return "file uploaded successfully :)" # a message for the javascript callback
-        return "failed!!"
+                print fname, lname, tribe
+                query = "EXEC InsertCampers @Fname='"+fname+"',@Lname='"+lname+"',@Tribe='"+tribe+"'"
+                print query
+                cursor.execute(query)
+            print "all done, committing"
+            conn.commit()
+            return "File uploaded successfully :)" # a message for the javascript callback
+        return "Oops! Something went wrong :("
     else: # it is a get request, return the webpage after rendering it
         return render_template("upload.html")
 
