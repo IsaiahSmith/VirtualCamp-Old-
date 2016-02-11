@@ -30,11 +30,18 @@ def login_user():
         username = request.form['username']
         password = request.form['password']
         print username, password
-        # cursor.execute("EXEC AttemptLogin @username = " + username + ", @password = " + password)
-        # results = cursor.fetchall()
-        # print "login results:", results
-        # if results == []:
-        return redirect("/attendance")
+        query = "EXEC AttemptLogin @username='"+username+"',@password='"+password+"'"
+        cursor.execute(query)
+        results = cursor.fetchall()
+        print "login results:", results
+        if len(results) > 1:
+            print "ERROR: we have two users with the same username.  this should not happen ever since username is a primary key"
+            return render_template("login.html", message="internal server error")
+        elif results == [] or results[0]['password'] != password:
+            return render_template("login.html", message="invalid username or password")
+        else:
+            # TODO: set the session variable however that works.
+            return redirect("/attendance")
     else:
         return render_template("login.html")
     
