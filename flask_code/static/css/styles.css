@@ -12,10 +12,12 @@ a:hover		{color: black;
 			background-color: green;
 			color: white;}
 			
-
+#body		{padding-top: 45px;
+			padding-left: 60px;
+			height: 400px;}
 			
-#navList	{border-right: solid green 1px;
-			padding-left: 30px;}
+#navList	{padding-left: 30px;
+			border-right: solid green 2px;}
 			
 .navItem	{border-bottom: solid green 1px;
 			padding: 26px;
@@ -36,6 +38,10 @@ li.headerLi	{list-style-type: none;
 #camp		{color: white;
 			font-size: 32pt;
 			font-family: Batang, Century, Times;}
+
+#addCamper	{text-decoration: underline;}
+
+#x			{text-decoration: underline;}
 
 #logout		{text-align: right;
 			font-size: 11pt;}
@@ -64,20 +70,11 @@ h2			{text-align: center;}
 a			{text-decoration: none;
 			color: black;}
 
-#loginContain		{border: solid black;
+#loginContain		{border: solid green;
 					border-radius: 10px;
 					background-color: white;}
 			
 #loginbtn	{background-color: #D3D3D3;
 			border-radius: 4px;
 			padding: 3px;}
-
-#footer		{width: 100%;
-			background-color: green;
-			color: white;
-			font-size: 18pt;
-			text-align: center;
-			font-family: Consolas, Cooper Black, Berlin;
-			/*position: fixed;
-			bottom: 0px;*/}
 			

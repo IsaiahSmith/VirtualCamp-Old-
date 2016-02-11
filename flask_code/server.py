@@ -41,12 +41,17 @@ def login_user():
 @app.route("/attendance")
 def attendance_page():
     cursor.execute("EXEC GetTodaysAttendance")
-    results = cursor.fetchall()
-    return render_template("attendance.html", attendance=results)
+    results = cursor.fetchall();
+    cursor.execute("EXEC GetAllCampers")
+    answer = cursor.fetchall();
+    number = len(results);
+    return render_template("attendance.html", attendance=results, notHereYet=answer, count=number)
 
-@app.route("/signup")
-def signup_page():
-    return render_template("signup.html")
+@app.route("/setAttendance")
+def setAttendance_page():
+    cursor.execute("EXEC GetAllCampers")
+    results = cursor.fetchall();
+    return render_template("setAttendance.html", list=results)
 
 @app.route("/about")
 def about_page():
