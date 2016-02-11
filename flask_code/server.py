@@ -1,6 +1,7 @@
 from flask import Flask, redirect, render_template, url_for, request
 import pymssql
 import csv
+import datetime;
 app = Flask(__name__)
 
 # get SQL Server credentials. 
@@ -38,7 +39,7 @@ def login_user():
     
 
 
-@app.route("/attendance")
+@app.route("/attendance", methods=['GET', 'POST'])
 def attendance_page():
     cursor.execute("EXEC GetTodaysAttendance")
     results = cursor.fetchall();
@@ -47,9 +48,9 @@ def attendance_page():
     number = len(results);
     return render_template("attendance.html", attendance=results, notHereYet=answer, count=number)
 
-@app.route("/setAttendance")
+@app.route("/setAttendance", methods=['GET', 'POST'])
 def setAttendance_page():
-    cursor.execute("EXEC GetAllCampers")
+    cursor.execute("EXEC GetAllCampers");
     results = cursor.fetchall();
     return render_template("setAttendance.html", list=results)
 
@@ -61,8 +62,25 @@ def about_page():
 def contact_page():
     return render_template("contact.html")
 
-@app.route("/schedule")
+@app.route("/setSchedule")
+def setSchedule_page():
+    return render_template("setSchedule.html")
+
+@app.route("/schedule", methods=['GET', 'POST'])
 def schedule_page():
+    date = datetime.datetime.today();
+    if(date.weekday() != 0):
+        if(date.weekday() <= 4):
+            date -= datetime.timedelta(days=date.weekday());
+        if(date.weekday() == 5):
+            date += datetime.timedelta(days=2);
+        if(date.weekday() == 6):
+            date += datetime.timedelta(days=1);
+    print date
+#     query = "EXEC GetWeeksSchedule";
+#     query += "@date="+datetime.today();
+#     cursor.execute(query);
+#     results = cursor.fetchall();
     return render_template("schedule.html")
 
 @app.route("/settings")
