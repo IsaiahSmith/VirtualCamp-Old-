@@ -9,7 +9,8 @@ server = credential_file.readline().strip()
 username = credential_file.readline().strip()
 password = credential_file.readline().strip()
 dbname = credential_file.readline().strip()
-print "db server:", server, "db name:", dbname
+print "db server:", server
+print "db name:", dbname
 
 # connect to the Micosoft SQL server
 conn = pymssql.connect(server, username, password, dbname)
