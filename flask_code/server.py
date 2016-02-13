@@ -62,12 +62,14 @@ def attendance_page():
         conn.commit();
         return fname + " " +lname + ", " + tribe
     else:
-        cursor.execute("EXEC GetTodaysAttendance")
+        cursor.execute("EXEC GetTodaysAttendance");
         results = cursor.fetchall();
         cursor.execute("EXEC GetNotHereToday");
         answer = cursor.fetchall();
         number = len(results);
-        return render_template("attendance.html", attendance=results, notHereYet=answer, count=number)
+        cursor.execute("EXEC GetAllCampers");
+        all = cursor.fetchall();
+        return render_template("attendance.html", attendance=results, notHereYet=answer, allCampers=all, count=number)
 
 @app.route("/setAttendance", methods=['GET', 'POST'])
 def setAttendance_page():
@@ -138,7 +140,26 @@ def upload_page():
     else: # it is a get request, return the webpage after rendering it
         return render_template("upload.html")
 
-
+@app.route("/camperPage", methods=['GET', 'POST'])
+def camper_page():
+    if request.method == 'GET':
+        camperID = request.form['id'];
+        cursor.execute("EXEC GetCamperInfo @id ='"+camperID+"'");
+        basic = cursor.fetchAll();
+        cursor.execute("EXEC GetCamperAllergies @id ='"+camperID+"'");
+        allerg = cursor.fetchAll();
+        cursor.execute("EXEC GetCamperDiscipline @id ='"+camperID+"'");
+        discp = cursor.fetchAll();
+        cursor.execute("EXEC GetAllCampers");
+        all = cursor.fetchall();
+        return render_template("camperPage.html", basicInfo=basic, allergies=allerg, discipline=discp, allCampers=all)
+    else:
+        
+        return render_template("notFound.html")
+    
+@app.route("/notFound")
+def notFound_page():
+    return render_template("notFound.html")
 
 
 def allowed_file(filename):

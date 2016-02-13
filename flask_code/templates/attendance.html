@@ -34,6 +34,7 @@
 			</div>
 			<div class="col-md-8" id="body">
 				<ul id="todAttend"><h1>Today's Attendance <small>Count is: <span id="count">{{count}}</span></small></h1>
+								   <a href="setAttendance">Set Today's Attendance</a>
 					<hr />
 
 					{% for row in attendance %}
@@ -53,23 +54,23 @@
 						</div>
 					</li>
 					<li id="addCamper"><a onmousedown="displayAdd();">add</a></li>
+
 					<li id="x" style="display: none;"><a onmousedown="hideAdd();"> Cancel </a></li>
 				</ul>
 			</div>
-			<div class="col-md-2">
-				<a href="setAttendance">Set Today's Attendance</a>
+			<div class="col-md-2" id="rightPanel">
+				<ul><h2>Campers Pages</h2>
+					<hr style="width: 100%"/>
+					{% for row in allCampers %}
+					<a class="pageLink" onmousedown="attemptCamperPage('{{row["ID"]}}');" id='{{row["ID"]}}'><li id="camperLink">{{row["First Name"]}} {{row["Last Name"]}}, {{row["Tribe"]}}</li></a>
+					{% endfor %}
+				</ul>
 			</div>
 		</div>
 	</body>
 	
 	<script>
 		function attemptAdd(id) {
-			// var not = document.getElementById("notHere");
-			// not.style.display = "none";
-			// var cancel = document.getElementById("x");
-			// cancel.style.display = "none";
-			// var realAdd = document.getElementById("addCamper");
-			// realAdd.style.display = "initial";
 			var elem = document.getElementById(id);
 			var string = elem.textContent;
 			string += ", ";
@@ -110,6 +111,23 @@
 			x.style.display = "none";
 			var realAdd = document.getElementById("addCamper");
 			realAdd.style.display = "initial";
+		}
+		
+		function attemptCamperPage(id) {
+			var formData = new FormData();
+			formData.append('id', id);
+			
+			$.ajax({
+				type: "GET",
+				url : "/camperPage",
+				data: formData,
+				contentType : false,
+				processData : false,
+				success: function(result){
+						console.log("Cool beans");
+						// window.location.replace("/camperPage")
+					}
+			});
 		}
 	</script>
 

@@ -16,6 +16,19 @@ a:hover		{color: black;
 #body		{padding-top: 45px;
 			padding-left: 60px;}
 			
+#rightPanel	{padding-top: 45px;
+			border-left: solid green 1px;}
+			
+#camperLink	{padding: 15px;
+			border-bottom: solid green 1px;}
+			
+li#camperLink:hover	{background-color: #f6f6f6;}
+
+a.pageLink	{color: black;}
+
+a.pageLink:hover	{text-decoration: none;
+					color: green;}
+			
 #navList	{padding-left: 30px;
 			border-right: solid green 2px;}
 			
