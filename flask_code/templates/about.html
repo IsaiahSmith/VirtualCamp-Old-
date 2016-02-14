@@ -17,10 +17,11 @@
 			<div class="col-md-4"><span id="logo"><a href="attendance">Virtual<span id="camp">Camp</span></a></span></div>
 			<div class="col-md-1"></div>
 			<div class="col-md-2">Shelbyville Parks Dept. Day Camp</div>
-			<div class="col-md-1"></div>
-			<div class="col-md-3"><a href="about">About</a>
+			<div class="col-md-1">Hello, {{session['name'].split(",")[0]}}</div>
+			<div class="col-md-2"><a href="about">About</a>
 				|
 			<a href="contact">Contact Us</a></div>
+			<div class="col-md-1"><a href="login">logout</a></div>
 		</div>
 		
 		<div class="row">
@@ -37,9 +38,5 @@
 				about info
 			</div>
 		</div>
-		
-		<div class="row" id="footer">
-			<div class="col-md">[Copyright info] [other junk]<span id="logout">Logout</span></div>
-		</div>	
 	</body>
 </html>

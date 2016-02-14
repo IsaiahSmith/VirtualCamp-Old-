@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, url_for, request
+from flask import Flask, redirect, render_template, url_for, request, session
 import pymssql
 import csv
 import datetime;
@@ -18,29 +18,43 @@ conn = pymssql.connect(server, username, password, dbname)
 cursor = conn.cursor(as_dict=True)
 #conn.close() # maybe we should close the connection at some point
 
+# Session secret key
+app.secret_key = 'F12Zr47j\3yX R~X@H!jmM]Lwf/,?KT'
+
 @app.route("/")
 def index():
+    session.clear()
+    sumSessionCounter()
     return redirect("/login")
+
+def sumSessionCounter():
+  try:
+    session['counter'] += 1
+  except KeyError:
+    session['counter'] = 1
 
 
 @app.route("/login", methods=['GET', 'POST'])
 def login_user():
     if(request.method == 'POST'):
+        # clear session
+        session.clear()
         # check db to see if it's valid
         username = request.form['username']
         password = request.form['password']
-        print username, password
         query = "EXEC AttemptLogin @username='"+username+"',@password='"+password+"'"
         cursor.execute(query)
         results = cursor.fetchall()
-        print "login results:", results
+        
+        
         if len(results) > 1:
             print "ERROR: we have two users with the same username.  this should not happen ever since username is a primary key"
             return render_template("login.html", message="internal server error")
         elif results == [] or results[0]['password'] != password:
             return render_template("login.html", message="invalid username or password")
         else:
-            # TODO: set the session variable however that works.
+            # set the session variable
+            session['name'] = results[0]['Fname'] +","+ str(results[0]['isAdmin'])
             return redirect("/attendance")
     else:
         return render_template("login.html")
@@ -49,6 +63,7 @@ def login_user():
 
 @app.route("/attendance", methods=['GET', 'POST'])
 def attendance_page():
+    sumSessionCounter()
     if request.method == 'POST':
         camper = request.form['string']
         camperArr = camper.split(", ")
@@ -73,6 +88,7 @@ def attendance_page():
 
 @app.route("/setAttendance", methods=['GET', 'POST'])
 def setAttendance_page():
+    sumSessionCounter()
     if request.method == 'POST':
         list = request.form['list']
         split = list.split(",");
@@ -87,18 +103,22 @@ def setAttendance_page():
 
 @app.route("/about")
 def about_page():
+    sumSessionCounter()
     return render_template("about.html")
 
 @app.route("/contact")
 def contact_page():
+    sumSessionCounter()
     return render_template("contact.html")
 
 @app.route("/setSchedule")
 def setSchedule_page():
+    sumSessionCounter()
     return render_template("setSchedule.html")
 
 @app.route("/schedule", methods=['GET', 'POST'])
 def schedule_page():
+    sumSessionCounter()
     date = datetime.datetime.today();
     if(date.weekday() != 0):
         if(date.weekday() <= 4):
@@ -116,10 +136,12 @@ def schedule_page():
 
 @app.route("/settings")
 def settings_page():
+    sumSessionCounter()
     return render_template("settings.html")
 
 @app.route("/upload", methods=['GET', 'POST'])
 def upload_page():
+    sumSessionCounter()
     if request.method == 'POST':
         upload_file = request.files.get('file', default=None)
         if upload_file and allowed_file(upload_file.filename):
@@ -142,6 +164,7 @@ def upload_page():
 
 @app.route("/camperPage", methods=['GET', 'POST'])
 def camper_page():
+    sumSessionCounter()
     if request.method == 'GET':
         camperID = request.form['id'];
         cursor.execute("EXEC GetCamperInfo @id ='"+camperID+"'");
@@ -159,6 +182,7 @@ def camper_page():
     
 @app.route("/notFound")
 def notFound_page():
+    sumSessionCounter()
     return render_template("notFound.html")
 
 
