@@ -96,6 +96,16 @@ def attendance_page():
         all = cursor.fetchall();
         return render_template("attendance.html", attendance=results, notHereYet=answer, allCampers=all, count=number)
 
+@app.route("/archive", methods=['GET', 'POST'])
+def archive_page():
+    sumSessionCounter()
+    if request.method == 'POST':
+        nothing
+    else:
+        cursor.execute("EXEC GetArchivedAttendance");
+        results = cursor.fetchall();
+        return render_template("archive.html", attendance=results)
+
 @app.route("/setAttendance", methods=['GET', 'POST'])
 def setAttendance_page():
     sumSessionCounter()
@@ -145,8 +155,29 @@ def schedule_page():
 #     results = cursor.fetchall();
     return render_template("schedule.html")
 
-@app.route("/settings", methods=['GET', 'POST'])
+@app.route("/settings")
 def settings_page():
+    sumSessionCounter()
+    cursor.execute("EXEC GetThemes")
+    results = cursor.fetchall()
+    return render_template("settings.html", themes=results)
+    
+@app.route("/settingsPassword", methods=['GET', 'POST'])
+def setPass():
+    sumSessionCounter()
+    if request.method == 'POST':
+        newPass = request.form['pass']
+        id = request.form['id']
+        cursor.execute("EXEC ChangePassword @newpass='"+newPass+"',@id='"+id+"'")
+        conn.commit();
+        return "all good"
+    else:
+        cursor.execute("EXEC GetThemes")
+        results = cursor.fetchall()
+        return render_template("settings.html", themes=results)
+    
+@app.route("/settingsTheme", methods=['GET', 'POST'])
+def setTheme():
     sumSessionCounter()
     if request.method == 'POST':
         theme = request.form['theme']

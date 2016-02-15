@@ -33,55 +33,24 @@
 					<li class="navItem"><a class="navClick" href="settings">Settings</a></li>
 				</ul>
 			</div>
-			
 			<div class="col-md-8" id="body">
-				<ul id="todAttend"><h1>Set Today's Attendance</h1>
+				<ul id="todAttend"><h1>Attendance Archive</h1>
 					<hr />
-					{% for row in list %}
-					<div class="checkbox" id='{{row["ID"]}}'>
-						<label id='{{row["ID"]}}label'><input type="checkbox" id='{{row["ID"]}}i'>{{row["First Name"]}} {{row["Last Name"]}}, {{row["Tribe"]}}</label>
-					</div>
+
+					{% for row in attendance %}
+					
+					<li>{{row["Date"]}} - {{row["First Name"]}} {{row["Last Name"]}}, {{row["Tribe"]}}</li>
 					{% endfor %}
 				</ul>
 			</div>
 			<div class="col-md-2">
-				<button onmousedown="attemptSave();">Save</button>
-				<br />
-				<p id="message" style="display: none;"></p>
+				
 			</div>
 		</div>
 	</body>
 	
 	<script>
-		function attemptSave() {
-			var rows = document.getElementsByClassName("checkbox");
-			var adding =[];
-			for(i = 0; i < rows.length; i++){
-				if(document.getElementById(rows[i].id+'i').checked){
-					adding.push(rows[i].id);			
-				}
-			}
-			if(adding.length == 0){
-				var message = document.getElementById("message");
-				message.style.display = 'initial';
-				message.className = "badMessage";
-				message.textContent = "You did not select anything";
-			}else{
-				var formData = new FormData();
-				formData.append("list", adding);
-				
-				$.ajax({
-					type: "POST",
-					url : "/setAttendance",
-					data: formData,
-					contentType : false,
-					processData : false,
-					success: function(result){
-						window.location.replace("/attendance")
-					}
-				});
-			}
-		}
 	</script>
 
 </html>
+				

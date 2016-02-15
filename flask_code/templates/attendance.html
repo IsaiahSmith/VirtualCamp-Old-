@@ -11,7 +11,7 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 	</head>
 
-	<body onload="">
+	<body>
 		<div class="row" id="header">
 			<div class="col-md-1"></div>
 			<div class="col-md-4"><span id="logo"><a href="attendance">Virtual<span id="camp">Camp</span></a></span></div>
@@ -34,8 +34,12 @@
 				</ul>
 			</div>
 			<div class="col-md-8" id="body">
-				<ul id="todAttend"><h1>Today's Attendance <small>Count is: <span id="count">{{count}}</span></small></h1>
+				<ul id="todAttend"><h1>Today's Attendance
+									<br />
+									<small>Count is: <span id="count">{{count}}</span></small></h1>
 								   <a href="setAttendance">Set Today's Attendance</a>
+								   <br />
+								   <a href="archive">View Archive</a>
 					<hr />
 
 					{% for row in attendance %}
@@ -60,7 +64,7 @@
 				</ul>
 			</div>
 			<div class="col-md-2" id="rightPanel">
-				<ul><h2>Campers Pages</h2>
+				<ul><h2 id="camperPagesHeading">Campers Pages</h2>
 					<hr style="width: 100%"/>
 					{% for row in allCampers %}
 					<a class="pageLink" onmousedown="attemptCamperPage('{{row["ID"]}}');" id='{{row["ID"]}}'><li id="camperLink">{{row["First Name"]}} {{row["Last Name"]}}, {{row["Tribe"]}}</li></a>

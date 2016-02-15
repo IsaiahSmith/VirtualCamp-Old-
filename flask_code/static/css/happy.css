@@ -14,15 +14,18 @@ a:hover		{color: black;
 
 #template	{margin-left: 25px;}
 
-#header		{height: 100px;
+#header		{font-family: "Comic Sans MS", cursive, sans-serif;
+			height: 100px;
 			padding-top: 25px;
 			background-color: #ADD8E6;
 			color: white;}
 			
-#body		{padding-top: 45px;
+#body		{font-family: "Comic Sans MS", cursive, sans-serif;
+			padding-top: 45px;
 			padding-left: 60px;}
 			
-#rightPanel	{padding-top: 45px;
+#rightPanel	{font-family: "Comic Sans MS", cursive, sans-serif;
+			padding-top: 45px;
 			border-left: solid #ADD8E6 1px;}
 			
 #camperLink	{padding: 15px;
@@ -35,7 +38,8 @@ a.pageLink	{color: black;}
 a.pageLink:hover	{text-decoration: none;
 					color: #ADD8E6;}
 			
-#navList	{padding-left: 30px;
+#navList	{font-family: "Comic Sans MS", cursive, sans-serif;
+			padding-left: 30px;
 			border-right: solid #ADD8E6 2px;}
 			
 .navItem	{border-bottom: solid #ADD8E6 1px;
@@ -102,15 +106,7 @@ ul			{list-style-type: none;
 hr#right	{text-align:right;
 			margin-left: 365px;}
 
-h2			{text-align: center;}
+h2#camperPagesHeading	{text-align: center;}
 
 a			{text-decoration: none;
 			color: black;}
-
-#loginContain		{border: solid #ADD8E6;
-					border-radius: 10px;
-					background-color: white;}
-			
-#loginbtn	{background-color: #D3D3D3;
-			border-radius: 4px;
-			padding: 3px;}

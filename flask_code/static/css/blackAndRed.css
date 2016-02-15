@@ -1,4 +1,4 @@
-body		{font-family: "Toms Handwriting", Cooper Black, Berlin;}
+body		{font-family: "Chiller", Cooper Black, Berlin;}
 
 a			{color: black;
 			cursor: pointer;}
@@ -14,15 +14,18 @@ a:hover		{color: black;
 
 #template	{margin-left: 25px;}
 
-#header		{height: 100px;
+#header		{font-family: "Chiller", Cooper Black, Berlin;
+			height: 100px;
 			padding-top: 25px;
 			background-color: black;
 			color: white;}
 			
-#body		{padding-top: 45px;
+#body		{font-family: "Chiller", Cooper Black, Berlin;
+			padding-top: 45px;
 			padding-left: 60px;}
 			
-#rightPanel	{padding-top: 45px;
+#rightPanel	{font-family: "Chiller", Cooper Black, Berlin;
+			padding-top: 45px;
 			border-left: solid red 1px;}
 			
 #camperLink	{padding: 15px;
@@ -35,7 +38,8 @@ a.pageLink	{color: black;}
 a.pageLink:hover	{text-decoration: none;
 					color: red;}
 			
-#navList	{padding-left: 30px;
+#navList	{font-family: "Chiller", Cooper Black, Berlin;
+			padding-left: 30px;
 			border-right: solid red 2px;}
 			
 .navItem	{border-bottom: solid red 1px;
@@ -59,7 +63,8 @@ a.pageLink:hover	{text-decoration: none;
 				height: 555px;
 				overflow-x: scroll;}
 
-.day		 {background-color: white;
+.day		 {font-family: "Chiller", Cooper Black, Berlin;
+			background-color: white;
 			float: left;
 			padding: 6px;
 			margin: 5px;
@@ -71,11 +76,12 @@ a.pageLink:hover	{text-decoration: none;
 li.headerLi	{list-style-type: none;
 			display: inline;}
 			
-#logo		{font-size: 28pt;}
+#logo		{font-family: "Chiller", Cooper Black, Berlin;
+			font-size: 28pt;}
 			
-#camp		{color: white;
-			font-size: 32pt;
-			font-family: Batang, Century, Times;}
+#camp		{font-family: "Chiller", Cooper Black, Berlin;
+			color: white;
+			font-size: 32pt;}
 
 #addCamper	{text-decoration: underline;}
 
@@ -103,15 +109,7 @@ ul			{list-style-type: none;
 hr#right	{text-align:right;
 			margin-left: 365px;}
 
-h2			{text-align: center;}
+h2#camperPagesHeading	{text-align: center;}
 
 a			{text-decoration: none;
 			color: black;}
-
-#loginContain		{border: solid red;
-					border-radius: 10px;
-					background-color: white;}
-			
-#loginbtn	{background-color: #D3D3D3;
-			border-radius: 4px;
-			padding: 3px;}
