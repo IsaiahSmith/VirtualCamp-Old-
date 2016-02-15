@@ -226,7 +226,7 @@ def upload_page():
                 lname = row[1]
                 tribe = row[2]
                 print fname, lname, tribe
-                query = "EXEC InsertCampers @Fname='"+fname+"',@Lname='"+lname+"',@Tribe='"+tribe+"'"
+                query = "EXEC InsertCamper @Fname='"+fname+"',@Lname='"+lname+"',@Tribe='"+tribe+"'"
                 print query
                 cursor.execute(query)
             print "all done, committing"
