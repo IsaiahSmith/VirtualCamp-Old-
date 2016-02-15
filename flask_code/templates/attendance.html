@@ -81,7 +81,7 @@
 				<ul><h2 id="camperPagesHeading">Campers Pages</h2>
 					<hr style="width: 100%"/>
 					{% for row in allCampers %}
-					<a class="pageLink" onmousedown="attemptCamperPage('{{row["ID"]}}');" id='{{row["ID"]}}'><li id="camperLink">{{row["First Name"]}} {{row["Last Name"]}}, {{row["Tribe"]}}</li></a>
+					<a class="pageLink" href="/camperPage/{{row["ID"]}}" id='{{row["ID"]}}'><li id="camperLink">{{row["First Name"]}} {{row["Last Name"]}}, {{row["Tribe"]}}</li></a>
 					{% endfor %}
 				</ul>
 			</div>
@@ -132,22 +132,22 @@
 			realAdd.style.display = "initial";
 		}
 		
-		function attemptCamperPage(id) {
-			var formData = new FormData();
-			formData.append('id', id);
-			
-			$.ajax({
-				type: "GET",
-				url : "/camperPage",
-				data: formData,
-				contentType : false,
-				processData : false,
-				success: function(result){
-						console.log("Cool beans");
-						// window.location.replace("/camperPage")
-					}
-			});
-		}
+		// function attemptCamperPage(id) {
+			// var formData = new FormData();
+			// formData.append('id', id);
+// 			
+			// $.ajax({
+				// type: "GET",
+				// url : "/camperPage",
+				// data: formData,
+				// contentType : false,
+				// processData : false,
+				// success: function(result){
+						// console.log("Cool beans");
+						// // window.location.replace("/camperPage")
+					// }
+			// });
+		// }
 		
 		function camperChanged(id) {
 			var richText = document.getElementById(id+'s');

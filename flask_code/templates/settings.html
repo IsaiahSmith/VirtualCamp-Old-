@@ -50,8 +50,12 @@
 				<p id="themeMessage" style="display: none;"></p>
 				
 				<br />
+				<br />
 				
 				<h2>Change Password</h2>
+				<input type="password" id="oldPass" placeholder="current password" />
+				<br />
+				<br />
 				<input type="password" id="newPass" placeholder="new password" />
 				<input type="password" id="confirmPass" placeholder="confirm password" />
 				<button onclick="attemptChangePass('{{session['id']}}');">Save</button>
@@ -102,10 +106,11 @@
 		function attemptChangePass(id) {
 			var message = document.getElementById("passMessage");
 			var newPass = document.getElementById("newPass");
+			var oldPass = document.getElementById("oldPass");
 			
 			var confirm = document.getElementById("confirmPass");
 			
-			if(newPass.value == "" || confirm.value =="") {
+			if(newPass.value == "" || confirm.value == "" || oldPass.value == "") {
 				message.style.display = 'initial';
 				message.className = "badMessage";
 				message.textContent = "You cannot leave anything blank!";
@@ -120,9 +125,11 @@
 				    document.getElementById("passMessage").style.display = 'none';
 				}, 3000);
 			} else {
-				newPass = newPass.value;
+				newP = newPass.value;
+				old = oldPass.value;
 				var formData = new FormData();
-				formData.append("pass", newPass);
+				formData.append("pass", newP);
+				formData.append("old", old);
 				formData.append("id", id);
 				
 				$.ajax({
@@ -132,9 +139,28 @@
 					contentType : false,
 					processData : false,
 					success: function(result){
-						message.className = "goodMessage";
-						message.textContent = "Your password was changed successfully";
-						message.style.display = 'initial';	
+						if(result == "worked") {
+							message.className = "goodMessage";
+							message.textContent = "Your password was changed successfully";
+							message.style.display = 'initial';
+							setTimeout(function(){
+							    document.getElementById("passMessage").style.display = 'none';
+							    newPass.value = "";
+							    oldPass.value = "";
+							    confirm.value = "";
+							}, 3000);							
+						}else{
+							message.className = "badMessage";
+							message.textContent = "You lied! You gave us the wrong password!";
+							message.style.display = 'initial';
+							setTimeout(function(){
+							    document.getElementById("passMessage").style.display = 'none';
+							    newPass.value = "";
+							    oldPass.value = "";
+							    confirm.value = "";
+							}, 3000);
+						}
+							
 					}
 				});
 			}

@@ -190,10 +190,14 @@ def setPass():
     sumSessionCounter()
     if request.method == 'POST':
         newPass = request.form['pass']
+        oldPass = request.form['old']
         id = request.form['id']
-        cursor.execute("EXEC ChangePassword @newpass='"+newPass+"',@id='"+id+"'")
-        conn.commit();
-        return "all good"
+        cursor.execute("EXEC ChangePassword @newpass='"+newPass+"',@oldpass='"+oldPass+"',@id='"+id+"'")
+        conn.commit()
+        if cursor.fetchall() != None:
+            return "false"
+        else:
+            return "worked"
     else:
         cursor.execute("EXEC GetThemes")
         results = cursor.fetchall()
@@ -237,23 +241,19 @@ def upload_page():
     else: # it is a get request, return the webpage after rendering it
         return render_template("upload.html")
 
-@app.route("/camperPage", methods=['GET', 'POST'])
-def camper_page():
+@app.route("/camperPage/<camperID>", methods=['GET', 'POST'])
+def camper_page(camperID):
     sumSessionCounter()
-    if request.method == 'GET':
-        camperID = request.form['id'];
-        cursor.execute("EXEC GetCamperInfo @id ='"+camperID+"'");
-        basic = cursor.fetchAll();
-        cursor.execute("EXEC GetCamperAllergies @id ='"+camperID+"'");
-        allerg = cursor.fetchAll();
-        cursor.execute("EXEC GetCamperDiscipline @id ='"+camperID+"'");
-        discp = cursor.fetchAll();
-        cursor.execute("EXEC GetAllCampers");
-        all = cursor.fetchall();
-        return render_template("camperPage.html", basicInfo=basic, allergies=allerg, discipline=discp, allCampers=all)
-    else:
-        
-        return render_template("notFound.html")
+    cursor.execute("EXEC GetCamperInfo @id ='"+camperID+"'");
+    basic = cursor.fetchall();
+#         cursor.execute("EXEC GetCamperAllergies @id ='"+camperID+"'");
+#         allerg = cursor.fetchAll();
+#         cursor.execute("EXEC GetCamperDiscipline @id ='"+camperID+"'");
+#         discp = cursor.fetchAll();
+    cursor.execute("EXEC GetAllCampers");
+    all = cursor.fetchall();
+    return render_template("camperPage.html", basicInfo=basic, allCampers=all) #, allergies=allerg, discipline=discp)
+
     
 @app.route("/notFound")
 def notFound_page():
