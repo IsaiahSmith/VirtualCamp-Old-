@@ -67,6 +67,7 @@ def login_user():
                 
             return redirect("/attendance")
     else:
+        session.clear()
         return render_template("login.html")
     
 
