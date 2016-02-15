@@ -18,8 +18,10 @@ a:hover		{color: black;
 .goodMessage	{color: green;
 				font-style: italic;}
 				
-.badMessage	{color: green;
+.badMessage	{color: red;
 			font-style: italic;}
+			
+.attendName	{padding: 9px;}
 
 #template	{margin-left: 25px;}
 

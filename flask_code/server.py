@@ -89,12 +89,34 @@ def attendance_page():
     else:
         cursor.execute("EXEC GetTodaysAttendance");
         results = cursor.fetchall();
+        number = 0
+        for row in results:
+            if row["here"] == True:
+                number = number + 1
         cursor.execute("EXEC GetNotHereToday");
         answer = cursor.fetchall();
-        number = len(results);
+        
         cursor.execute("EXEC GetAllCampers");
         all = cursor.fetchall();
         return render_template("attendance.html", attendance=results, notHereYet=answer, allCampers=all, count=number)
+    
+@app.route("/camperLeft", methods=['GET', 'POST'])
+def camperLeft():
+    if request.method == 'POST':
+        id = request.form['id']
+        date = datetime.datetime.today();
+        cursor.execute("EXEC CamperLeft @date ='"+str(date)+"', @id ='"+id+"'")
+        conn.commit();
+        return "all good"
+
+@app.route("/camperCameBack", methods=['GET', 'POST'])
+def camperCameBack():
+    if request.method == 'POST':
+        id = request.form['id']
+        date = datetime.datetime.today();
+        cursor.execute("EXEC CamperCameBack @date ='"+str(date)+"', @id ='"+id+"'")
+        conn.commit();
+        return "all good"
 
 @app.route("/archive", methods=['GET', 'POST'])
 def archive_page():

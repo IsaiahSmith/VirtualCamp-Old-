@@ -11,6 +11,8 @@ a:hover		{color: black;
 				
 .badMessage	{color: green;
 			font-style: italic;}
+			
+.attendName	{padding: 9px;}
 
 #template	{margin-left: 25px;}
 
