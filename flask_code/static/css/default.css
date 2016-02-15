@@ -1,5 +1,14 @@
 body		{font-family: "Toms Handwriting", Cooper Black, Berlin;}
 
+#imgContain {width: auto;
+			height: 650px;
+  			margin: 0 auto;
+  			text-align: center}
+
+.carouselimg	{width: auto;
+				height: 650px;
+				margin: 0 auto;}
+
 a			{color: black;
 			cursor: pointer;}
 

@@ -37,13 +37,18 @@
 				<ul id="todAttend"><h1>Today's Attendance
 									<br />
 									<small>Count is: <span id="count">{{count}}</span></small></h1>
-								   <a href="setAttendance">Set Today's Attendance</a>
+								   {% if session['isAdmin'] == "True" %}
+								   	<a href="setAttendance">Set Today's Attendance</a>
+								   {% endif %}
 								   <br />
 								   <a href="archive">View Archive</a>
 					<hr />
 
 					{% for row in attendance %}
-					<li>{{row["First Name"]}} {{row["Last Name"]}}, {{row["Tribe"]}}</li>
+					<li><button id='{{row["ID"]}}b' class="leftButton" onclick="camperLeft('{{row["ID"]}}')">Left</button>
+						&nbsp;
+						<span id='{{row["ID"]}}s'>{{row["First Name"]}} {{row["Last Name"]}}, {{row["Tribe"]}}</span>
+					</li>
 					{% endfor %}
 				</ul>
 				<ul>
@@ -53,7 +58,9 @@
   							<span class="caret"></span></button>
   							<ul class="dropdown-menu">
 								{% for row in notHereYet %}
-								<li><a onmousedown="attemptAdd('{{row["ID"]}}');" id='{{row["ID"]}}'>{{row["First Name"]}} {{row["Last Name"]}}, {{row["Tribe"]}}</a></li>
+								<li>
+									<a onmousedown="attemptAdd('{{row["ID"]}}');" id='{{row["ID"]}}'>{{row["First Name"]}} {{row["Last Name"]}}, {{row["Tribe"]}}</a>
+								</li>
 								{% endfor %}
 							</ul>
 						</div>
@@ -133,6 +140,25 @@
 						// window.location.replace("/camperPage")
 					}
 			});
+		}
+		
+		function camperLeft(id) {
+			var richText = document.getElementById(id+'s');
+			if(richText.style.color == 'red') {
+				richText.style.color = 'black';
+			}else{
+				richText.style.color = 'red';
+			}
+			var button = document.getElementById(id+'b');
+			if(button.textContent == "Left") {
+				var count = document.getElementById("count").textContent;
+				document.getElementById("count").textContent = parseInt(count) - 1;
+				button.textContent = "Came Back";
+			}else{
+				var count = document.getElementById("count").textContent;
+				document.getElementById("count").textContent = parseInt(count) + 1;
+				button.textContent = "Left";
+			}
 		}
 	</script>
 
