@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<title>VirtualCamp</title>
-		<link href="{{ url_for('static', filename='css/styles.css') }}" type="text/css" rel="stylesheet" />
+		<link href="{{ url_for('static', filename=session['theme']) }}" type="text/css" rel="stylesheet" />
 		<script src="http://code.jquery.com/jquery-2.1.4.js"></script>
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -17,7 +17,7 @@
 			<div class="col-md-4"><span id="logo"><a href="attendance">Virtual<span id="camp">Camp</span></a></span></div>
 			<div class="col-md-1"></div>
 			<div class="col-md-2">Shelbyville Parks Dept. Day Camp</div>
-			<div class="col-md-1">Hello, {{session['name'].split(",")[0]}}</div>
+			<div class="col-md-1">Hello, {{session['name']}}</div>
 			<div class="col-md-2"><a href="about">About</a>
 				|
 			<a href="contact">Contact Us</a></div>
@@ -34,13 +34,58 @@
 				</ul>
 			</div>
 			<div class="col-md-8" id="body">
-				settings
+				<h2>Set Color Theme</h2>
+				<div class="dropdown">
+					<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose Theme
+					<span class="caret"></span></button>
+					<ul class="dropdown-menu">
+						{% for row in themes %}
+						<li id='{{row['Name']}}'><a onmousedown="setAsSelected('{{row['Name']}}');">{{row['Name']}}</a></li>
+						{% endfor %}
+					</ul>
+				</div>
+				<br />
+				<button id="" onclick="attemptSaveTheme('{{session['id']}}');">Save</button>
+				<br />
+				<p id="themeMessage" style="display: none;"></p>
 			</div>
 		</div>
 	</body>
 
 	<script>
-	
+		function attemptSaveTheme(id) {
+			var message = document.getElementById("themeMessage");
+			var selected = document.getElementById("selected");
+			selected.id = selected.textContent;
+			if(selected == null) {
+				message.style.display = 'initial';
+				message.className = "badMessage";
+				message.textContent = "You must select a theme to save!";
+			} else {
+				var themeName = selected.textContent;
+				var formData = new FormData();
+				formData.append("theme", themeName);
+				formData.append("id", id);
+				
+				$.ajax({
+					type: "POST",
+					url : "/settings",
+					data: formData,
+					contentType : false,
+					processData : false,
+					success: function(result){
+						message.className = "goodMessage";
+						message.textContent = "You saved your theme! Refresh the page to see it!";
+						message.style.display = 'initial';	
+					}
+				});
+			}
+		}
+		
+		function setAsSelected(theme) {
+			var selected = document.getElementById(theme);
+			selected.id = "selected";
+		}
 	</script>
 	
 </html>

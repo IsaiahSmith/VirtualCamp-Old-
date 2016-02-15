@@ -5,6 +5,12 @@ a			{color: black;
 
 a:hover		{color: black;
 			text-decoration: none;}
+			
+.goodMessage	{color: green;
+				font-style: italic;}
+				
+.badMessage	{color: green;
+			font-style: italic;}
 
 #template	{margin-left: 25px;}
 

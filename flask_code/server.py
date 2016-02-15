@@ -25,6 +25,7 @@ app.secret_key = 'F12Zr47j\3yX R~X@H!jmM]Lwf/,?KT'
 def index():
     session.clear()
     sumSessionCounter()
+    session['theme'] = 'css/default.css';
     return redirect("/login")
 
 def sumSessionCounter():
@@ -54,7 +55,16 @@ def login_user():
             return render_template("login.html", message="invalid username or password")
         else:
             # set the session variable
-            session['name'] = results[0]['Fname'] +","+ str(results[0]['isAdmin'])
+            session['name'] = results[0]['Fname']
+            session['id'] = results[0]['id']
+            session['isAdmin'] = str(results[0]['isAdmin'])
+            
+            session['theme'] = results
+            if results[0]['colTheme'] == None:
+                session['theme'] = 'css/default.css'
+            else:
+                setThemeSession(results[0]['colTheme']);
+                
             return redirect("/attendance")
     else:
         return render_template("login.html")
@@ -95,6 +105,7 @@ def setAttendance_page():
         date = datetime.datetime.today();
         for id in split:
             cursor.execute("EXEC InsertAttending @date ='"+str(date)+"', @id ='"+id+"'")
+            conn.commit();
         return redirect("/attendance")
     else:
         cursor.execute("EXEC GetNotHereToday");
@@ -134,10 +145,20 @@ def schedule_page():
 #     results = cursor.fetchall();
     return render_template("schedule.html")
 
-@app.route("/settings")
+@app.route("/settings", methods=['GET', 'POST'])
 def settings_page():
     sumSessionCounter()
-    return render_template("settings.html")
+    if request.method == 'POST':
+        theme = request.form['theme']
+        id = request.form['id']
+        cursor.execute("EXEC SetTheme @theme='"+theme+"',@id='"+id+"'")
+        conn.commit();
+        setThemeSession(theme);
+        return "all good"
+    else:
+        cursor.execute("EXEC GetThemes")
+        results = cursor.fetchall()
+        return render_template("settings.html", themes=results)
 
 @app.route("/upload", methods=['GET', 'POST'])
 def upload_page():
@@ -188,6 +209,11 @@ def notFound_page():
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] == 'csv'
+
+def setThemeSession(name):
+    cursor.execute("EXEC GetSpecifiedTheme @theme='"+name+"'");
+    themes = cursor.fetchall();
+    session['theme'] = themes[0]['CSSName']
 
 if __name__ == "__main__":
     app.debug = True # TODO: remove for production
