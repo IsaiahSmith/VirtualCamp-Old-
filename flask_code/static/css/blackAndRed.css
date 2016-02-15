@@ -1,33 +1,57 @@
-body		{font-family: "Toms Handwriting", Cooper Black, Berlin;}
+body		{font-family: "Chiller", Cooper Black, Berlin;}
 
 a			{color: black;
 			cursor: pointer;}
 
 a:hover		{color: black;
 			text-decoration: none;}
+			
+.goodMessage	{color: green;
+				font-style: italic;}
+				
+.badMessage	{color: green;
+			font-style: italic;}
+			
+.attendName	{padding: 9px;}
 
 #template	{margin-left: 25px;}
 
-#header		{height: 100px;
+#header		{font-family: "Chiller", Cooper Black, Berlin;
+			height: 100px;
 			padding-top: 25px;
-			background-color: green;
+			background-color: black;
 			color: white;}
 			
-#body		{padding-top: 45px;
+#body		{font-family: "Chiller", Cooper Black, Berlin;
+			padding-top: 45px;
 			padding-left: 60px;}
 			
-#navList	{padding-left: 30px;
-			border-right: solid green 2px;}
+#rightPanel	{font-family: "Chiller", Cooper Black, Berlin;
+			padding-top: 45px;
+			border-left: solid red 1px;}
 			
-.navItem	{border-bottom: solid green 1px;
+#camperLink	{padding: 15px;
+			border-bottom: solid red 1px;}
+			
+li#camperLink:hover	{background-color: #f6f6f6;}
+
+a.pageLink	{color: black;}
+
+a.pageLink:hover	{text-decoration: none;
+					color: red;}
+			
+#navList	{font-family: "Chiller", Cooper Black, Berlin;
+			padding-left: 30px;
+			border-right: solid red 2px;}
+			
+.navItem	{border-bottom: solid red 1px;
 			padding: 26px;
-			color: green;
 			font-size: 20px;}
 	
 .navClick	{color: black;
 			text-decoration: none;}
 			
-.navClick:hover	{color: green;
+.navClick:hover	{color: red;
 				text-decoration: none;}
 				
 				
@@ -41,7 +65,8 @@ a:hover		{color: black;
 				height: 555px;
 				overflow-x: scroll;}
 
-.day		 {background-color: white;
+.day		 {font-family: "Chiller", Cooper Black, Berlin;
+			background-color: white;
 			float: left;
 			padding: 6px;
 			margin: 5px;
@@ -53,11 +78,12 @@ a:hover		{color: black;
 li.headerLi	{list-style-type: none;
 			display: inline;}
 			
-#logo		{font-size: 28pt;}
+#logo		{font-family: "Chiller", Cooper Black, Berlin;
+			font-size: 28pt;}
 			
-#camp		{color: white;
-			font-size: 32pt;
-			font-family: Batang, Century, Times;}
+#camp		{font-family: "Chiller", Cooper Black, Berlin;
+			color: white;
+			font-size: 32pt;}
 
 #addCamper	{text-decoration: underline;}
 
@@ -85,15 +111,7 @@ ul			{list-style-type: none;
 hr#right	{text-align:right;
 			margin-left: 365px;}
 
-h2			{text-align: center;}
+h2#camperPagesHeading	{text-align: center;}
 
 a			{text-decoration: none;
 			color: black;}
-
-#loginContain		{border: solid green;
-					border-radius: 10px;
-					background-color: white;}
-			
-#loginbtn	{background-color: #D3D3D3;
-			border-radius: 4px;
-			padding: 3px;}

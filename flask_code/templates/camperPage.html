@@ -9,10 +9,9 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 		<!-- Latest compiled and minified JavaScript -->
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-
 	</head>
 
-	<body>
+	<body onload="">
 		<div class="row" id="header">
 			<div class="col-md-1"></div>
 			<div class="col-md-4"><span id="logo"><a href="attendance">Virtual<span id="camp">Camp</span></a></span></div>
@@ -28,50 +27,34 @@
 		<div class="row">
 			<div class="col-md-2" id="navList">
 				<ul>
-					<li class="navItem"><a class="navClick" href="attendance">Home</a></li>
-					<li class="navItem"><a class="navClick" href="schedule">Work Schedule</a></li>
-					<li class="navItem"><a class="navClick" href="upload">Upload</a></li>
-					<li class="navItem"><a class="navClick" href="settings">Settings</a></li>
+					<li class="navItem"><a class="navClick" href="/attendance">Home</a></li>
+					<li class="navItem"><a class="navClick" href="/schedule">Work Schedule</a></li>
+					<li class="navItem"><a class="navClick" href="/upload">Upload</a></li>
+					<li class="navItem"><a class="navClick" href="/settings">Settings</a></li>
 				</ul>
 			</div>
 			<div class="col-md-8" id="body">
-				<h1>Upload a .csv File</h1>
-				<h1><small>Make sure the format is <i>FirstName-LastName-Tribe</i></small></h1>
+				{% for row in basicInfo %}
+				<h1>{{row["First Name"]}} {{row["Last Name"]}}</h1>
+				<h3>{{row["Tribe"]}}</h3>
+				{% endfor %}
 				
 				<br />
+				<h2>Medical Information</h2>
 				
-				<input type="file" name="fileToUpload" id="fileToUpload">
-				
-				<br />
-				
-				<button onclick="attemptUpload();">Upload File</button>
-				<h3 id="messageBox"></h3>
+			</div>
+			<div class="col-md-2" id="rightPanel">
+				<ul><h2>Campers Pages</h2>
+					<hr style="width: 100%"/>
+					{% for row in allCampers %}
+					<a class="pageLink" href="camperPage/{{row["ID"]}}" id='{{row["ID"]}}'><li id="camperLink">{{row["First Name"]}} {{row["Last Name"]}}, {{row["Tribe"]}}</li></a>
+					{% endfor %}
+				</ul>
 			</div>
 		</div>
 	</body>
 	
 	<script>
-	function attemptUpload() {
-		var file = document.getElementById("fileToUpload").files[0];
-		var formData = new FormData();
-		formData.append("file", file);
-		document.getElementById("messageBox").value = "Uploading..."
-		
-		$.ajax({
-			type: "POST",
-			url : "/upload",
-			data: formData,
-			contentType : false,
-			processData : false,
-			success: function(result){
-				document.getElementById("messageBox").innerHTML = result;
-				document.getElementById("fileToUpload").value = "";
-				setTimeout(function(){
-				    document.getElementById("messageBox").innerHTML = "";
-				}, 2000);
-			}
-		});
-	}
 	</script>
 
 </html>

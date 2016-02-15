@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>VirtualCamp</title>
-        <link href="{{ url_for('static', filename='css/styles.css') }}" type="text/css" rel="stylesheet" />
+        <link href="{{ url_for('static', filename='css/default.css') }}" type="text/css" rel="stylesheet" />
         <script src="http://code.jquery.com/jquery-2.1.4.js"></script>
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -36,17 +36,21 @@
                       </ol>
                 
                       <!-- Wrapper for slides -->
-                      <div class="carousel-inner" role="listbox">
+                      <div class="carousel-inner" id="imgContain" role="listbox">
                         <div class="item active">
-                          <img src="static/images/carousel3.jpg" alt="first">
+                          <img src="static/images/carouselimg1.jpg" alt="first" class="carouselimg">
                         </div>
                     
                         <div class="item">
-                          <img src="static/images/carousel1.jpg" alt="second">
+                          <img src="static/images/carouselimg2.jpg" alt="second" class="carouselimg">
                         </div>
                     
                         <div class="item">
-                          <img src="static/images/carousel2.jpg" alt="third">
+                          <img src="static/images/carouselimg3.jpg" alt="third" class="carouselimg">
+                        </div>
+                        
+                        <div class="item">
+                          <img src="static/images/carouselimg4.jpg" alt="third" class="carouselimg">
                         </div>
                       </div>
                 
@@ -68,16 +72,12 @@
                 <h2>Log in</h2>
                 <hr />
                 <br />
-                <form action="login" method=post enctype=multipart/form-data>
+                <form action="login" method="post" enctype="multipart/form-data">
                     <input id="usernameInput" type="text" name="username" placeholder="username" /><br />
-                    <input id="passwordInput" type="text" name="password" placeholder="password" /><br /><br />
-                    <!-- <button id="loginbtn" onclick="attemptLogin();">Login</button> -->
+                    <input id="passwordInput" type="password" name="password" placeholder="password" /><br /><br />
                     <input type="submit" value="Sign in" />
                     <p style="color:red;">{{message}}</p>
                 </form>
-                
-                    <!-- <p><input type="text" class="form-control" id="titleInput" placeholder="Title" name="title">
-                       </p> -->
             </div>
             
             <div class="col-md-1"></div>
@@ -85,26 +85,6 @@
     </body>
 
     <script>
-    // function attemptLogin() {
-    //     var username = document.getElementById("usernameInput").value;
-    //     var password = document.getElementById("passwordInput").value;
-    //     console.log(username)
-    //     console.log(password)
-
-    //     var formData = new FormData();
-    //     formData.append("username", username);
-    //     formData.append("password", password);
-
-    //     $.ajax({
-    //       type : "POST",
-    //       url : "/login",
-    //       data: formData,
-    //       contentType: false,
-    //       processData: false,
-    //       success: function(result) {
-    //           document.getElementById("messageBox").innerHTML = result
-    //       }
-    //     });
-    // }
+    
     </script>
 </html>

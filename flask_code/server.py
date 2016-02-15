@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, url_for, request
+from flask import Flask, redirect, render_template, url_for, request, session
 import pymssql
 import csv
 import datetime;
@@ -18,37 +18,63 @@ conn = pymssql.connect(server, username, password, dbname)
 cursor = conn.cursor(as_dict=True)
 #conn.close() # maybe we should close the connection at some point
 
+# Session secret key
+app.secret_key = 'F12Zr47j\3yX R~X@H!jmM]Lwf/,?KT'
+
 @app.route("/")
 def index():
+    session.clear()
+    sumSessionCounter()
+    session['theme'] = 'css/default.css';
     return redirect("/login")
+
+def sumSessionCounter():
+  try:
+    session['counter'] += 1
+  except KeyError:
+    session['counter'] = 1
 
 
 @app.route("/login", methods=['GET', 'POST'])
 def login_user():
     if(request.method == 'POST'):
+        # clear session
+        session.clear()
         # check db to see if it's valid
         username = request.form['username']
         password = request.form['password']
-        print username, password
         query = "EXEC AttemptLogin @username='"+username+"',@password='"+password+"'"
         cursor.execute(query)
         results = cursor.fetchall()
-        print "login results:", results
+        
+        
         if len(results) > 1:
             print "ERROR: we have two users with the same username.  this should not happen ever since username is a primary key"
             return render_template("login.html", message="internal server error")
         elif results == [] or results[0]['password'] != password:
             return render_template("login.html", message="invalid username or password")
         else:
-            # TODO: set the session variable however that works.
+            # set the session variable
+            session['name'] = results[0]['Fname']
+            session['id'] = results[0]['id']
+            session['isAdmin'] = str(results[0]['isAdmin'])
+            
+            session['theme'] = results
+            if results[0]['colTheme'] == None:
+                session['theme'] = 'css/default.css'
+            else:
+                setThemeSession(results[0]['colTheme']);
+                
             return redirect("/attendance")
     else:
+        session.clear()
         return render_template("login.html")
     
 
 
 @app.route("/attendance", methods=['GET', 'POST'])
 def attendance_page():
+    sumSessionCounter()
     if request.method == 'POST':
         camper = request.form['string']
         camperArr = camper.split(", ")
@@ -62,21 +88,57 @@ def attendance_page():
         conn.commit();
         return fname + " " +lname + ", " + tribe
     else:
-        cursor.execute("EXEC GetTodaysAttendance")
+        cursor.execute("EXEC GetTodaysAttendance");
         results = cursor.fetchall();
+        number = 0
+        for row in results:
+            if row["here"] == True:
+                number = number + 1
         cursor.execute("EXEC GetNotHereToday");
         answer = cursor.fetchall();
-        number = len(results);
-        return render_template("attendance.html", attendance=results, notHereYet=answer, count=number)
+        
+        cursor.execute("EXEC GetAllCampers");
+        all = cursor.fetchall();
+        return render_template("attendance.html", attendance=results, notHereYet=answer, allCampers=all, count=number)
+    
+@app.route("/camperLeft", methods=['GET', 'POST'])
+def camperLeft():
+    if request.method == 'POST':
+        id = request.form['id']
+        date = datetime.datetime.today();
+        cursor.execute("EXEC CamperLeft @date ='"+str(date)+"', @id ='"+id+"'")
+        conn.commit();
+        return "all good"
+
+@app.route("/camperCameBack", methods=['GET', 'POST'])
+def camperCameBack():
+    if request.method == 'POST':
+        id = request.form['id']
+        date = datetime.datetime.today();
+        cursor.execute("EXEC CamperCameBack @date ='"+str(date)+"', @id ='"+id+"'")
+        conn.commit();
+        return "all good"
+
+@app.route("/archive", methods=['GET', 'POST'])
+def archive_page():
+    sumSessionCounter()
+    if request.method == 'POST':
+        nothing
+    else:
+        cursor.execute("EXEC GetArchivedAttendance");
+        results = cursor.fetchall();
+        return render_template("archive.html", attendance=results)
 
 @app.route("/setAttendance", methods=['GET', 'POST'])
 def setAttendance_page():
+    sumSessionCounter()
     if request.method == 'POST':
         list = request.form['list']
         split = list.split(",");
         date = datetime.datetime.today();
         for id in split:
             cursor.execute("EXEC InsertAttending @date ='"+str(date)+"', @id ='"+id+"'")
+            conn.commit();
         return redirect("/attendance")
     else:
         cursor.execute("EXEC GetNotHereToday");
@@ -85,18 +147,22 @@ def setAttendance_page():
 
 @app.route("/about")
 def about_page():
+    sumSessionCounter()
     return render_template("about.html")
 
 @app.route("/contact")
 def contact_page():
+    sumSessionCounter()
     return render_template("contact.html")
 
 @app.route("/setSchedule")
 def setSchedule_page():
+    sumSessionCounter()
     return render_template("setSchedule.html")
 
 @app.route("/schedule", methods=['GET', 'POST'])
 def schedule_page():
+    sumSessionCounter()
     date = datetime.datetime.today();
     if(date.weekday() != 0):
         if(date.weekday() <= 4):
@@ -114,10 +180,47 @@ def schedule_page():
 
 @app.route("/settings")
 def settings_page():
-    return render_template("settings.html")
+    sumSessionCounter()
+    cursor.execute("EXEC GetThemes")
+    results = cursor.fetchall()
+    return render_template("settings.html", themes=results)
+    
+@app.route("/settingsPassword", methods=['GET', 'POST'])
+def setPass():
+    sumSessionCounter()
+    if request.method == 'POST':
+        newPass = request.form['pass']
+        oldPass = request.form['old']
+        id = request.form['id']
+        cursor.execute("EXEC ChangePassword @newpass='"+newPass+"',@oldpass='"+oldPass+"',@id='"+id+"'")
+        conn.commit()
+        if cursor.fetchall() != None:
+            return "false"
+        else:
+            return "worked"
+    else:
+        cursor.execute("EXEC GetThemes")
+        results = cursor.fetchall()
+        return render_template("settings.html", themes=results)
+    
+@app.route("/settingsTheme", methods=['GET', 'POST'])
+def setTheme():
+    sumSessionCounter()
+    if request.method == 'POST':
+        theme = request.form['theme']
+        id = request.form['id']
+        cursor.execute("EXEC SetTheme @theme='"+theme+"',@id='"+id+"'")
+        conn.commit();
+        setThemeSession(theme);
+        return "all good"
+    else:
+        cursor.execute("EXEC GetThemes")
+        results = cursor.fetchall()
+        return render_template("settings.html", themes=results)
 
 @app.route("/upload", methods=['GET', 'POST'])
 def upload_page():
+    sumSessionCounter()
     if request.method == 'POST':
         upload_file = request.files.get('file', default=None)
         if upload_file and allowed_file(upload_file.filename):
@@ -128,7 +231,7 @@ def upload_page():
                 lname = row[1]
                 tribe = row[2]
                 print fname, lname, tribe
-                query = "EXEC InsertCampers @Fname='"+fname+"',@Lname='"+lname+"',@Tribe='"+tribe+"'"
+                query = "EXEC InsertCamper @Fname='"+fname+"',@Lname='"+lname+"',@Tribe='"+tribe+"'"
                 print query
                 cursor.execute(query)
             print "all done, committing"
@@ -138,11 +241,33 @@ def upload_page():
     else: # it is a get request, return the webpage after rendering it
         return render_template("upload.html")
 
+@app.route("/camperPage/<camperID>", methods=['GET', 'POST'])
+def camper_page(camperID):
+    sumSessionCounter()
+    cursor.execute("EXEC GetCamperInfo @id ='"+camperID+"'");
+    basic = cursor.fetchall();
+#         cursor.execute("EXEC GetCamperAllergies @id ='"+camperID+"'");
+#         allerg = cursor.fetchAll();
+#         cursor.execute("EXEC GetCamperDiscipline @id ='"+camperID+"'");
+#         discp = cursor.fetchAll();
+    cursor.execute("EXEC GetAllCampers");
+    all = cursor.fetchall();
+    return render_template("camperPage.html", basicInfo=basic, allCampers=all) #, allergies=allerg, discipline=discp)
 
+    
+@app.route("/notFound")
+def notFound_page():
+    sumSessionCounter()
+    return render_template("notFound.html")
 
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] == 'csv'
+
+def setThemeSession(name):
+    cursor.execute("EXEC GetSpecifiedTheme @theme='"+name+"'");
+    themes = cursor.fetchall();
+    session['theme'] = themes[0]['CSSName']
 
 if __name__ == "__main__":
     app.debug = True # TODO: remove for production

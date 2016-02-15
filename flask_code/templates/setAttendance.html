@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<title>VirtualCamp</title>
-		<link href="{{ url_for('static', filename='css/styles.css') }}" type="text/css" rel="stylesheet" />
+		<link href="{{ url_for('static', filename=session['theme']) }}" type="text/css" rel="stylesheet" />
 		<script src="http://code.jquery.com/jquery-2.1.4.js"></script>
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -17,10 +17,11 @@
 			<div class="col-md-4"><span id="logo"><a href="attendance">Virtual<span id="camp">Camp</span></a></span></div>
 			<div class="col-md-1"></div>
 			<div class="col-md-2">Shelbyville Parks Dept. Day Camp</div>
-			<div class="col-md-1"></div>
-			<div class="col-md-3"><a href="about">About</a>
+			<div class="col-md-1">Hello, {{session['name']}}</div>
+			<div class="col-md-2"><a href="about">About</a>
 				|
 			<a href="contact">Contact Us</a></div>
+			<div class="col-md-1"><a href="login">logout</a></div>
 		</div>
 		
 		<div class="row">
@@ -45,6 +46,8 @@
 			</div>
 			<div class="col-md-2">
 				<button onmousedown="attemptSave();">Save</button>
+				<br />
+				<p id="message" style="display: none;"></p>
 			</div>
 		</div>
 	</body>
@@ -55,23 +58,32 @@
 			var adding =[];
 			for(i = 0; i < rows.length; i++){
 				if(document.getElementById(rows[i].id+'i').checked){
-					console.log(rows[i].id);
 					adding.push(rows[i].id);			
 				}
 			}
-			var formData = new FormData();
-			formData.append("list", adding);
-			
-			$.ajax({
-				type: "POST",
-				url : "/setAttendance",
-				data: formData,
-				contentType : false,
-				processData : false,
-				success: function(result){
-					window.location.replace("/attendance")
-				}
-			});
+			if(adding.length == 0){
+				var message = document.getElementById("message");
+				message.style.display = 'initial';
+				message.className = "badMessage";
+				message.textContent = "You did not select anything";
+				setTimeout(function(){
+				    document.getElementById("message").style.display = 'none';
+				}, 2000);
+			}else{
+				var formData = new FormData();
+				formData.append("list", adding);
+				
+				$.ajax({
+					type: "POST",
+					url : "/setAttendance",
+					data: formData,
+					contentType : false,
+					processData : false,
+					success: function(result){
+						window.location.replace("/attendance")
+					}
+				});
+			}
 		}
 	</script>
 
