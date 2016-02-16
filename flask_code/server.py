@@ -1,4 +1,5 @@
 from flask import Flask, redirect, render_template, url_for, request, session
+import bcrypt
 import pymssql
 import csv
 import datetime;
@@ -190,14 +191,17 @@ def setPass():
     sumSessionCounter()
     if request.method == 'POST':
         newPass = request.form['pass']
+        hashed = bcrypt.hashpw(newPass.encode('utf-8'), bcrypt.gensalt())
+        print bcrypt.gensalt()
+        
         oldPass = request.form['old']
+        oldHashedPass = bcrypt.hashpw(oldPass.encode('utf-8'), bcrypt.gensalt()) 
+        
         id = request.form['id']
-        cursor.execute("EXEC ChangePassword @newpass='"+newPass+"',@oldpass='"+oldPass+"',@id='"+id+"'")
+        cursor.execute("EXEC ChangePassword @newpass='"+hashed+"',@oldpass='"+oldPass+"',@id='"+id+"',@result=''")
+        ans = cursor.fetchall()[0]['result']
         conn.commit()
-        if cursor.fetchall() != None:
-            return "false"
-        else:
-            return "worked"
+        return ans
     else:
         cursor.execute("EXEC GetThemes")
         results = cursor.fetchall()
