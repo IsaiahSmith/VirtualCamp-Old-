@@ -190,21 +190,21 @@ def settings_page():
 def setPass():
     sumSessionCounter()
     if request.method == 'POST':
-        newPass = request.form['pass']
-        salt = cursor.execute("EXEC GetSalt")
-        hashed = bcrypt.hashpw(newPass.encode('utf-8'), salt)
-        print salt
-        
-        oldPass = request.form['old']
-       
-        
-        oldHashedPass = bcrypt.hashpw(oldPass.encode('utf-8'), salt) 
         id = request.form['id']
-        if oldHashedPass == cursor.execute("EXEC getOldPassword"):
-            cursor.execute("EXEC ChangePassword @newpass='"+hashed+"',@oldpass='"+oldPass+"',@id='"+id+"',@result=''")
-            ans = cursor.fetchall()[0]['result']
-            conn.commit()
-            return ans
+
+        newPass = request.form['pass']
+        newSalt = bcrypt.gensalt()
+        newHashed = bcrypt.hashpw(newPass.encode('utf-8'), newSalt)
+        
+        cursor.execute("EXEC GetSalt @id='"+id+"'")
+        oldSalt = cursor.fetchall()[0]['salt']
+        oldPass = request.form['old']
+        oldHashedPass = bcrypt.hashpw(oldPass.encode('utf-8'), oldSalt)
+        
+        cursor.execute("EXEC ChangePassword @newpass='"+newHashed+"',@newsalt='"+newSalt+"',@oldpass='"+oldPass+"',@id='"+id+"',@result=''")
+        ans = cursor.fetchall()[0]['result']
+        conn.commit()
+        return ans
     else:
         cursor.execute("EXEC GetThemes")
         results = cursor.fetchall()
