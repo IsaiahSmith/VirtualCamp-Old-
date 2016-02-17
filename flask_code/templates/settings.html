@@ -1,34 +1,85 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="col-md-8" id="body">
-	<h2>Set Color Theme</h2>
-	<div class="dropdown">
-		<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose Theme
-		<span class="caret"></span></button>
-		<ul class="dropdown-menu">
-			{% for row in themes %}
-			<li id='{{row['Name']}}'><a onmousedown="setAsSelected('{{row['Name']}}');">{{row['Name']}}</a></li>
-			{% endfor %}
-		</ul>
+	<div class="col-md-8" id="body">
+		<h2>Set Color Theme</h2>
+		<div class="dropdown">
+			<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose Theme
+			<span class="caret"></span></button>
+			<ul class="dropdown-menu">
+				{% for row in themes %}
+				<li id='{{row['Name']}}'><a onmousedown="setAsSelected('{{row['Name']}}');">{{row['Name']}}</a></li>
+				{% endfor %}
+			</ul>
+		</div>
+		<br />
+		<button id="" onclick="attemptSaveTheme('{{session['id']}}');">Save</button>
+		<br />
+		<p id="themeMessage" style="display: none;"></p>
+		
+		<br />
+		<br />
+		
+		<h2>Change Password</h2>
+		<input type="password" id="oldPass" placeholder="current password" />
+		<br />
+		<br />
+		<input type="password" id="newPass" placeholder="new password" />
+		<input type="password" id="confirmPass" placeholder="confirm password" />
+		<button onclick="attemptChangePass('{{session['id']}}');">Save</button>
+		<br />
+		<p id="passMessage" style="display: none;"></p>
+		
+		{% if session['isAdmin'] == "True" %}
+		<h2>Add Counselor</h2>
+		<div id="register form">
+			<input type="text" id="Fname" placeholder="First Name" />
+			<input type="text" id="Lname" placeholder="Last Name" />
+			<br />
+			<br />
+			<input type="text" id="Uname" placeholder="username" />
+			<br />
+			<br />
+			<input type="password" id="newPass" placeholder="new password" />
+			&nbsp;
+			<input type="password" id="confirmPass" placeholder="confirm password" />
+			<br />
+			<br />
+			<div class="dropdown" style="display: none;">
+				<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Make Admin?
+				<span class="caret"></span></button>
+				<ul class="dropdown-menu">
+					<li>
+						<a>Yes</a>
+					</li>
+					<li>
+						<a>No</a>
+					</li>
+				</ul>
+			</div>
+			<button onclick="attemptRegister();">Add</button>
+			<br />
+			<p id="regMessage" style="display: none;"></p>
+		</div>
+		{% endif %}
 	</div>
-	<br />
-	<button id="" onclick="attemptSaveTheme('{{session['id']}}');">Save</button>
-	<br />
-	<p id="themeMessage" style="display: none;"></p>
-	
-	<br />
-	<br />
-	
-	<h2>Change Password</h2>
-	<input type="password" id="oldPass" placeholder="current password" />
-	<br />
-	<br />
-	<input type="password" id="newPass" placeholder="new password" />
-	<input type="password" id="confirmPass" placeholder="confirm password" />
-	<button onclick="attemptChangePass('{{session['id']}}');">Save</button>
-	<br />
-	<p id="passMessage" style="display: none;"></p>
-</div>
+	<div class="col-md-2">
+		{% if session['isAdmin'] == "True" %}
+	   	<a onmousedown="showCounselorDrop();">Remove Counselor</a>
+	   	<br />
+	   	<br />
+	   	<div class="dropdown" style="display: none;">
+			<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose Couselor
+			<span class="caret"></span></button>
+			<ul class="dropdown-menu">
+				{% for row in counselors %}
+				<li>
+					<a onmousedown="attemptAdd('{{row["ID"]}}');" id='{{row["ID"]}}'>{{row["First Name"]}} {{row["Last Name"]}}</a>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+	   {% endif %}
+	</div>
 {% endblock %}
 
 {% block scripts %}
