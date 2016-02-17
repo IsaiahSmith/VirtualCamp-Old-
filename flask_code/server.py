@@ -1,8 +1,10 @@
 from flask import Flask, redirect, render_template, url_for, request, session
 import bcrypt
+from bcrypt import hashpw
 import pymssql
 import csv
 import datetime;
+
 app = Flask(__name__)
 
 # get SQL Server credentials. 
@@ -44,23 +46,31 @@ def login_user():
         # check db to see if it's valid
         username = request.form['username']
         password = request.form['password']
-        query = "EXEC AttemptLogin @username='"+username+"',@password='"+password+"'"
+        
+        cursor.execute("EXEC GetUserID @username='"+username+"'")
+        id = cursor.fetchall()[0]['id']
+        
+        cursor.execute("EXEC GetSalt @id='"+str(id)+"'")
+        salt = cursor.fetchall()[0]['Salt']
+        hashedPass = bcrypt.hashpw(password.encode('utf-8'), salt.encode('utf-8'))
+         
+        query = "EXEC AttemptLogin @username='"+username+"',@password='"+hashedPass+"'"
         cursor.execute(query)
         results = cursor.fetchall()
         
+        print results
         
         if len(results) > 1:
             print "ERROR: we have two users with the same username.  this should not happen ever since username is a primary key"
             return render_template("login.html", message="internal server error")
-        elif results == [] or results[0]['password'] != password:
+        elif results == [] or results[0]['password'] != hashedPass:
+            print hashedPass, results
             return render_template("login.html", message="invalid username or password")
         else:
             # set the session variable
             session['name'] = results[0]['Fname']
             session['id'] = results[0]['id']
             session['isAdmin'] = str(results[0]['isAdmin'])
-            
-            session['theme'] = results
             if results[0]['colTheme'] == None:
                 session['theme'] = 'css/default.css'
             else:
@@ -188,20 +198,47 @@ def settings_page():
     
 @app.route("/settingsPassword", methods=['GET', 'POST'])
 def setPass():
-    sumSessionCounter()
     if request.method == 'POST':
         id = request.form['id']
 
-        newPass = request.form['pass']
-        newSalt = bcrypt.gensalt()
+        newPass = request.form['newPass']
+        newSalt = str(bcrypt.gensalt())
         newHashed = bcrypt.hashpw(newPass.encode('utf-8'), newSalt)
         
-        cursor.execute("EXEC GetSalt @id='"+id+"'")
-        oldSalt = cursor.fetchall()[0]['salt']
-        oldPass = request.form['old']
-        oldHashedPass = bcrypt.hashpw(oldPass.encode('utf-8'), oldSalt)
+        oldPass = request.form['oldPass']
         
-        cursor.execute("EXEC ChangePassword @newpass='"+newHashed+"',@newsalt='"+newSalt+"',@oldpass='"+oldPass+"',@id='"+id+"',@result=''")
+        cursor.execute("EXEC GetSalt @id='"+id+"'")
+        oldSalt = cursor.fetchall()[0]['Salt']
+        oldHashedPass = bcrypt.hashpw(oldPass.encode('utf-8'), oldSalt.encode('utf-8'))
+        
+        cursor.execute("EXEC ChangePassword @newpass='"+newHashed+"',@newsalt='"+newSalt+"',@oldpass='"+oldHashedPass+"',@id='"+id+"',@result=''")
+        ans = cursor.fetchall()[0]['result']
+        conn.commit()
+        return ans
+    else:
+        cursor.execute("EXEC GetThemes")
+        results = cursor.fetchall()
+        return render_template("settings.html", themes=results)
+    
+@app.route("/settingsReg", methods=['GET', 'POST'])
+def regUser():
+    if request.method == 'POST':
+        username = request.form['username']
+        fname = request.form['fname']
+        lname = request.form['lname']
+        isAdmin = request.form['isAdmin']
+
+        password = request.form['pass']
+        salt = str(bcrypt.gensalt())
+        hashedPass = bcrypt.hashpw(password.encode('utf-8'), salt)
+        
+        cursor.execute("EXEC RegisterUser @username='"+username
+                       +"',@password='"+hashedPass
+                       +"',@salt='"+salt
+                       +"',@fname='"+fname
+                       +"',@lname='"+lname
+                       +"',@isAdmin='"+isAdmin
+                       +"',@result=''")
         ans = cursor.fetchall()[0]['result']
         conn.commit()
         return ans
@@ -212,7 +249,6 @@ def setPass():
     
 @app.route("/settingsTheme", methods=['GET', 'POST'])
 def setTheme():
-    sumSessionCounter()
     if request.method == 'POST':
         theme = request.form['theme']
         id = request.form['id']
@@ -275,6 +311,7 @@ def setThemeSession(name):
     cursor.execute("EXEC GetSpecifiedTheme @theme='"+name+"'");
     themes = cursor.fetchall();
     session['theme'] = themes[0]['CSSName']
+
 
 if __name__ == "__main__":
     app.debug = True # TODO: remove for production

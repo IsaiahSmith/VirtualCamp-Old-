@@ -110,5 +110,9 @@ hr#right	{text-align:right;
 
 h2#camperPagesHeading	{text-align: center;}
 
+#registerForm	{background-color: #ADD8E6;
+				width: 465px;
+				padding: 8px;}
+
 a			{text-decoration: none;
 			color: black;}
