@@ -169,7 +169,9 @@ def contact_page():
 @app.route("/setSchedule")
 def setSchedule_page():
     sumSessionCounter()
-    return render_template("setSchedule.html")
+    cursor.execute("EXEC GetCounselor")
+    results = cursor.fetchall()
+    return render_template("setSchedule.html", workers = results)
 
 @app.route("/schedule", methods=['GET', 'POST'])
 def schedule_page():
@@ -183,11 +185,12 @@ def schedule_page():
         if(date.weekday() == 6):
             date += datetime.timedelta(days=1);
     print date
-#     query = "EXEC GetWeeksSchedule";
+    cursor.execute("EXEC GetWorkSchedule @scheduleDate = '"+ str(date)+ "'");
+    schedule = cursor.fetchall();
 #     query += "@date="+datetime.today();
 #     cursor.execute(query);
 #     results = cursor.fetchall();
-    return render_template("schedule.html")
+    return render_template("schedule.html", schedule = schedule)
 
 @app.route("/settings")
 def settings_page():

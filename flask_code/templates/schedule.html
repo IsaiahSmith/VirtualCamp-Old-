@@ -8,7 +8,18 @@
     <div id="scheduleCont">
     	<div id="scheduleWrap">
 	        <div class="day"><h3>Monday</h3>
-	        	
+	        	{% for row in schedule %}
+	        	<li>{{row}}</li>
+	        	{% endfor %}
+	        	<!-- <div class="dropdown">
+			<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose Worker
+			<span class="caret"></span></button>
+			<ul class="dropdown-menu">
+				{% for row in themes %}
+				<li id='{{row['Name']}}'><a onmousedown="setAsSelected('{{row['Name']}}');">{{row['Name']}}</a></li>
+				{% endfor %}
+			</ul>
+		</div> -->
 	        </div>
 	        <div class="day"><h3>Tuesday</h3>
 	        	
@@ -16,7 +27,7 @@
 	        <div class="day"><h3>Wednesday</h3>
 	        	
 	        </div>
-	        <div class="day"><h3>Thrusday</h3>
+	        <div class="day"><h3>Thursday</h3>
 	        	
 	        </div>
 	        <div class="day"><h3>Friday</h3>
