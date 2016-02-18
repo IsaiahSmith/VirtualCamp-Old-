@@ -172,17 +172,16 @@ def contact_page():
 def setSchedule_page():
     if request.method == 'POST':
         mess = request.form['messyString']
+        print mess
         datestr = request.form['date']
         arrid = mess.split(';')
         for str in arrid:
-            if str == "":
+            if str != "":
                 ids = str.split(',')
                 eid = ids[0]
                 jid = ids[1]
                 cursor.execute("EXEC InsertSchedule @date='"+datestr+"',@eid='"+eid+"',@jid='"+jid+"'")
                 conn.commit()
-            else:
-                return "all good"
         return "all good"
     else:
         sumSessionCounter()
