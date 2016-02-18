@@ -63,7 +63,8 @@ a.pageLink:hover	{text-decoration: none;
 				border-right: solid #ADD8E6 5px;
 				border-left: solid #ADD8E6 5px;
 				width: 1000px;
-				height: 555px;}
+				height: 555px;
+				overflow-x: scroll;}
 
 #oscheduleWrap	{width: auto;
 				height: 460px;}

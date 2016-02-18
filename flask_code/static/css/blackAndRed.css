@@ -64,6 +64,16 @@ a.pageLink:hover	{text-decoration: none;
 				width: 1000px;
 				height: 555px;
 				overflow-x: scroll;}
+				
+#oscheduleWrap	{width: auto;
+				height: 460px;}
+
+#oscheduleCont	{background-color: red;
+				border: solid red 5px;
+				width: 400px;
+				height: 500px;
+				overflow-y: scroll;
+				margin-bottom: 20px;}
 
 .day		 {font-family: "Chiller", Cooper Black, Berlin;
 			background-color: white;
