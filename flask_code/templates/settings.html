@@ -64,13 +64,15 @@
 			<p id="regMessage" style="display: none;"></p>
 		</div>
 		{% endif %}
+		
 		{% if session['isAdmin'] == "True" %}
 		<h2>Add Job</h2>
 		<div id="registerForm">
 			<input type="text" id="Jname" placeholder="Job Name" />
-			<button onclick="attemptRegister();">Add Job</button>
+			<input type="text" id="time" placeholder="time ex. '7:30-4:30'"/>
+			<button onclick="attemptAddJob();">Add Job</button>
 			<br />
-			<p id="regMessage" style="display: none;"></p>
+			<p id="jobMessage" style="display: none;"></p>
 		</div>
 		{% endif %}
 	</div>
@@ -281,6 +283,32 @@
 			}else {
 				document.getElementById("adminAns").textContent = 'no';
 			}
+		}
+		
+		function attemptAddJob() {
+			var message = document.getElementById("jobMessage")
+			var jinput = document.getElementById("Jname");
+			var time = document.getElementById("time");
+			var formData = new FormData();
+			formData.append("Jname", jinput.value);
+			formData.append("time", time.value);
+			
+			$.ajax({
+				type: "POST",
+				url : "/settingsAddJob",
+				data: formData,
+				contentType : false,
+				processData : false,
+				success: function(result){
+					message.className = "goodMessage";
+					message.textContent = "You added "+jinput.value+" as a job!";
+					message.style.display = 'initial';
+					setTimeout(function(){
+					    document.getElementById("jobMessage").style.display = 'none';
+					    jinput.value = "";
+					}, 3000);
+				}
+			});
 		}
 	</script>
 {% endblock %}

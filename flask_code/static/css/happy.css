@@ -54,7 +54,8 @@ a.pageLink:hover	{text-decoration: none;
 .navClick:hover	{color: #ADD8E6;
 				text-decoration: none;}
 				
-				
+#startDate		{width: 200px;}
+
 #scheduleWrap	{width: 1800px;
 				height: 530px;}
 
@@ -62,14 +63,23 @@ a.pageLink:hover	{text-decoration: none;
 				border-right: solid #ADD8E6 5px;
 				border-left: solid #ADD8E6 5px;
 				width: 1000px;
-				height: 555px;
-				overflow-x: scroll;}
+				height: 555px;}
+
+#oscheduleWrap	{width: auto;
+				height: 460px;}
+
+#oscheduleCont	{background-color:#ADD8E6;
+				border: solid #ADD8E6 5px;
+				width: 400px;
+				height: 500px;
+				overflow-y: scroll;
+				margin-bottom: 20px;}
 
 .day		 {background-color: white;
 			float: left;
 			padding: 6px;
 			margin: 5px;
-			height: 500px;
+			height: auto;
 			width:	350px;}
 			
 #schedHead	{text-align: center;}

@@ -1,52 +1,95 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="col-md-8" id="body">
-	<h1 id="schedHead"><small><a onmousedown="goToPrevWeek();">previous week</a></small> 
-						<span id="currentWeek">This Week's</span> Schedule
-						<small><a onmousedown="goToNextWeek();">next week</a></small></h1>
+<div class="col-md-10" id="body">
+	<h1 id="schedHead"><small><a onmousedown="goToWeek('prev');">previous week</a></small> Schedule for week of <span id="currentWeek">{{monday[0]["Date"]}}</span> <small><a onmousedown="goToWeek('next');">next week</a></small></h1>
 	<a href="setSchedule">Set Schedule</a>
-    <div id="scheduleCont">
-    	<div id="scheduleWrap">
-	        <div class="day"><h3>Monday</h3>
-	        	{% for row in schedule %}
-	        	<li>{{row}}</li>
-	        	{% endfor %}
-	        	<!-- <div class="dropdown">
-			<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose Worker
-			<span class="caret"></span></button>
-			<ul class="dropdown-menu">
-				{% for row in themes %}
-				<li id='{{row['Name']}}'><a onmousedown="setAsSelected('{{row['Name']}}');">{{row['Name']}}</a></li>
+	<div id="scheduleCont">
+		<div id="scheduleWrap">
+			<div class="day">
+				<h3>Monday</h3>
+				<hr />
+				<ul>
+					{% for row in monday %}
+					<p>
+						{{row["Time"]}} doing {{row["Job"]}}
+					</p>
+					<p>
+						&nbsp; {{row["Fname"]}} {{row["Lname"]}}
+					</p>
+					{% endfor %}
+				</ul>
+			</div>
+			<div class="day">
+				<h3>Tuesday</h3>
+				<hr />
+				{% for row in tuesday %}
+				<p>
+					{{row["Time"]}} doing {{row["Job"]}}
+				</p>
+				<p>
+					&nbsp; {{row["Fname"]}} {{row["Lname"]}}
+				</p>
 				{% endfor %}
-			</ul>
-		</div> -->
-	        </div>
-	        <div class="day"><h3>Tuesday</h3>
-	        	
-	        </div>
-	        <div class="day"><h3>Wednesday</h3>
-	        	
-	        </div>
-	        <div class="day"><h3>Thursday</h3>
-	        	
-	        </div>
-	        <div class="day"><h3>Friday</h3>
-	        	
-	        </div>
-    	</div>
-    </div>
+			</div>
+			<div class="day">
+				<h3>Wednesday</h3>
+				<hr />
+				{% for row in wednesday %}
+				<p>
+					{{row["Time"]}} doing {{row["Job"]}}
+				</p>
+				<p>
+					&nbsp; {{row["Fname"]}} {{row["Lname"]}}
+				</p>
+				{% endfor %}
+			</div>
+			<div class="day">
+				<h3>Thursday</h3>
+				<hr />
+				{% for row in monday %}
+				<p>
+					{{row["Time"]}} doing {{row["Job"]}}
+				</p>
+				<p>
+					&nbsp; {{row["Fname"]}} {{row["Lname"]}}
+				</p>
+				{% endfor %}
+			</div>
+			<div class="day">
+				<h3>Friday</h3>
+				<hr />
+				{% for row in monday %}
+				<p>
+					{{row["Time"]}} doing {{row["Job"]}}
+				</p>
+				<p>
+					&nbsp; {{row["Fname"]}} {{row["Lname"]}}
+				</p>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
 </div>
 {% endblock %}
 
 {% block scripts %}
-	<script>
-		function goToPrevWeek() {
-			
-		}
-		function goToNextWeek() {
-			
-		}
-	</script>
+<script>
+	function goToWeek(name) {
+		var formData = new FormData();
+		formData.append('name', name);
+		formData.append('date', document.getElementById("currentWeek").textContent)
+		$.ajax({
+			type : "POST",
+			url : "/schedule",
+			data : formData,
+			contentType : false,
+			processData : false,
+			success : function(result) {
+				console.log(result[0][0]["Fname"]);
+				window.location.replace("/schedule")
+			}
+		});
+	}
+</script>
 {% endblock %}
 
-				
