@@ -64,6 +64,16 @@
 			<p id="regMessage" style="display: none;"></p>
 		</div>
 		{% endif %}
+		{% if session['isAdmin'] == "True" %}
+		<h2>Add Job</h2>
+		<div id="registerForm">
+			<input type="text" id="Jname" placeholder="Job Name" />
+			<button onclick="attemptRegister();">Add Job</button>
+			<br />
+			<p id="regMessage" style="display: none;"></p>
+		</div>
+		{% endif %}
+	</div>
 	</div>
 	
 	<div class="col-md-2">
