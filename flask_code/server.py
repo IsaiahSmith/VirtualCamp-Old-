@@ -149,9 +149,14 @@ def setAttendance_page():
             conn.commit();
         return redirect("/attendance")
     else:
-        cursor.execute("EXEC GetNotHereToday");
-        results = cursor.fetchall();
-        return render_template("setAttendance.html", list=results)
+        print session['isAdmin']
+        if session['isAdmin'] == False:
+            print session['isAdmin']
+            return redirect("/notAdmin")
+        else:
+            cursor.execute("EXEC GetNotHereToday");
+            results = cursor.fetchall();
+            return render_template("setAttendance.html", list=results)
 
 @app.route("/about")
 def about_page():
@@ -312,6 +317,11 @@ def camper_page(camperID):
 def notFound_page():
     sumSessionCounter()
     return render_template("notFound.html")
+
+@app.route("/notAdmin")
+def notAdmin_page():
+    sumSessionCounter()
+    return render_template("notAdmin.html")
 
 
 def allowed_file(filename):
