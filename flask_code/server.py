@@ -101,10 +101,7 @@ def attendance_page():
     else:
         cursor.execute("EXEC GetTodaysAttendance");
         results = cursor.fetchall();
-        number = 0
-        for row in results:
-            if row["here"] == True:
-                number = number + 1
+        number = len(results);
         cursor.execute("EXEC GetNotHereToday");
         answer = cursor.fetchall();
         
@@ -290,15 +287,25 @@ def upload_page():
 @app.route("/camperPage/<camperID>", methods=['GET', 'POST'])
 def camper_page(camperID):
     sumSessionCounter()
-    cursor.execute("EXEC GetCamperInfo @id ='"+camperID+"'");
-    basic = cursor.fetchall();
-#         cursor.execute("EXEC GetCamperAllergies @id ='"+camperID+"'");
-#         allerg = cursor.fetchAll();
-#         cursor.execute("EXEC GetCamperDiscipline @id ='"+camperID+"'");
-#         discp = cursor.fetchAll();
-    cursor.execute("EXEC GetAllCampers");
-    all = cursor.fetchall();
-    return render_template("camperPage.html", basicInfo=basic, allCampers=all) #, allergies=allerg, discipline=discp)
+    if request.method == 'POST':
+        did = request.form['did']
+        campID = request.form['camperID']
+        eid = request.form['counsID']
+        punish = request.form['punish']
+        cursor.execute("EXEC InsertDiscipline @campID='"+campID+"',@EID='"+eid+"',@DID='"+did+"',@punish='"+punish+"'");
+        return "all good"
+    else:
+        cursor.execute("EXEC GetCamperInfo @id ='"+camperID+"'");
+        basic = cursor.fetchall();
+        cursor.execute("EXEC GetCamperAllergies @id ='"+camperID+"'");
+        allerg = cursor.fetchall();
+        cursor.execute("EXEC GetCamperDiscipline @id ='"+camperID+"'");
+        discp = cursor.fetchall();
+        cursor.execute("EXEC GetAllCampers");
+        all = cursor.fetchall();
+        cursor.execute("EXEC GetAllDiscipline");
+        allD = cursor.fetchall();
+        return render_template("camperPage.html", basicInfo=basic, allCampers=all, allergies=allerg, discipline=discp, allDiscp=allD,id=camperID)
 
     
 @app.route("/notFound")
