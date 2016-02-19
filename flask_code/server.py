@@ -127,15 +127,12 @@ def camperCameBack():
         conn.commit();
         return "all good"
 
-@app.route("/archive", methods=['GET', 'POST'])
+@app.route("/archive")
 def archive_page():
     sumSessionCounter()
-    if request.method == 'POST':
-        nothing
-    else:
-        cursor.execute("EXEC GetArchivedAttendance");
-        results = cursor.fetchall();
-        return render_template("archive.html", attendance=results)
+    cursor.execute("EXEC GetArchivedAttendance");
+    results = cursor.fetchall();
+    return render_template("archive.html", attendance=results)
 
 @app.route("/setAttendance", methods=['GET', 'POST'])
 def setAttendance_page():
@@ -180,7 +177,8 @@ def setSchedule_page():
                 ids = str.split(',')
                 eid = ids[0]
                 jid = ids[1]
-                cursor.execute("EXEC InsertSchedule @date='"+datestr+"',@eid='"+eid+"',@jid='"+jid+"'")
+#                 cursor.execute("EXEC InsertSchedule @date='"+datestr+"',@eid='"+eid+"',@jid='"+jid+"'")
+                cursor.execute("EXEC InsertSchedule @date= %s,@eid= %s,@jid= %s", (datestr, eid, jid))
                 conn.commit()
         return "all good"
     else:
@@ -191,82 +189,58 @@ def setSchedule_page():
         jobs = cursor.fetchall()
         return render_template("setSchedule.html", workers=results, allJobs = jobs)
 
-@app.route("/schedule", methods=['GET', 'POST'])
+@app.route("/schedule")
 def schedule_page():
-    if request.method == 'POST':
-        name = request.form['name']
-        date = request.form['date'];
-        datearr = date.split("-")
-        year = datearr[0]
-        month = datearr[1]
-        day = datearr[2]
-        date = datetime.datetime(int(year), int(month), int(day))
-        if(date.weekday() != 0):
-            if(date.weekday() <= 4):
-                date -= datetime.timedelta(days=date.weekday());
-            if(date.weekday() == 5):
-                date += datetime.timedelta(days=2);
-            if(date.weekday() == 6):
-                date += datetime.timedelta(days=1);
-        if name == "prev":
-            date -= datetime.timedelta(days=7);
-        else:
-            date += datetime.timedelta(days=7);
-        cursor.execute("EXEC GetWorkSchedule @scheduleDate = '"+ str(date).split(" ")[0]+ "'");
-        mon = cursor.fetchall();
-        date += datetime.timedelta(days=1);
-         
-        cursor.execute("EXEC GetWorkSchedule @scheduleDate = '"+ str(date).split(" ")[0]+ "'");
-        tues = cursor.fetchall();
-        date += datetime.timedelta(days=1);
-         
-        cursor.execute("EXEC GetWorkSchedule @scheduleDate = '"+ str(date).split(" ")[0]+ "'");
-        wed = cursor.fetchall();
-        date += datetime.timedelta(days=1);
-         
-        cursor.execute("EXEC GetWorkSchedule @scheduleDate = '"+ str(date).split(" ")[0]+ "'");
-        thur = cursor.fetchall();
-        date += datetime.timedelta(days=1);
-        
-        cursor.execute("EXEC GetWorkSchedule @scheduleDate = '"+ str(date).split(" ")[0]+ "'");
-        fri = cursor.fetchall();
-        
-        monday = mon
-        tuesday = tues
-        wednesday=wed
-        thursday=thur
-        friday=fri
-        return "good"
-    else:
-        sumSessionCounter()
-        date = datetime.datetime.today();
-        if(date.weekday() != 0):
-            if(date.weekday() <= 4):
-                date -= datetime.timedelta(days=date.weekday());
-            if(date.weekday() == 5):
-                date += datetime.timedelta(days=2);
-            if(date.weekday() == 6):
-                date += datetime.timedelta(days=1);
-        cursor.execute("EXEC GetWorkSchedule @scheduleDate = '"+ str(date).split(" ")[0]+ "'");
-        mon = cursor.fetchall();
-        date += datetime.timedelta(days=1);
-        
-        cursor.execute("EXEC GetWorkSchedule @scheduleDate = '"+ str(date).split(" ")[0]+ "'");
-        tues = cursor.fetchall();
-        date += datetime.timedelta(days=1);
-        
-        cursor.execute("EXEC GetWorkSchedule @scheduleDate = '"+ str(date).split(" ")[0]+ "'");
-        wed = cursor.fetchall();
-        date += datetime.timedelta(days=1);
-        
-        cursor.execute("EXEC GetWorkSchedule @scheduleDate = '"+ str(date).split(" ")[0]+ "'");
-        thur = cursor.fetchall();
-        date += datetime.timedelta(days=1);
-        
-        cursor.execute("EXEC GetWorkSchedule @scheduleDate = '"+ str(date).split(" ")[0]+ "'");
-        fri = cursor.fetchall();
-        
-        return render_template("schedule.html", monday = mon, tuesday = tues, wednesday=wed, thursday=thur, friday=fri)
+    sumSessionCounter()
+    date = datetime.datetime.today();
+    if(date.weekday() != 0):
+        if(date.weekday() <= 4):
+            date -= datetime.timedelta(days=date.weekday());
+        if(date.weekday() == 5):
+            date += datetime.timedelta(days=2);
+        if(date.weekday() == 6):
+            date += datetime.timedelta(days=1);
+    cursor.execute("EXEC IsFieldTrip @scheduleDate = '"+ str(date).split(" ")[0]+ "'");
+    monft = cursor.fetchall();
+    cursor.execute("EXEC GetWorkSchedule @scheduleDate = '"+ str(date).split(" ")[0]+ "'");
+    mon = cursor.fetchall();
+    print monft
+    date += datetime.timedelta(days=1);
+    
+    cursor.execute("EXEC IsFieldTrip @scheduleDate = '"+ str(date).split(" ")[0]+ "'");
+    tuesft = cursor.fetchall();
+    cursor.execute("EXEC GetWorkSchedule @scheduleDate = '"+ str(date).split(" ")[0]+ "'");
+    tues = cursor.fetchall();
+    date += datetime.timedelta(days=1);
+    
+    cursor.execute("EXEC IsFieldTrip @scheduleDate = '"+ str(date).split(" ")[0]+ "'");
+    wedft = cursor.fetchall();
+    cursor.execute("EXEC GetWorkSchedule @scheduleDate = '"+ str(date).split(" ")[0]+ "'");
+    wed = cursor.fetchall();
+    date += datetime.timedelta(days=1);
+    
+    cursor.execute("EXEC IsFieldTrip @scheduleDate = '"+ str(date).split(" ")[0]+ "'");
+    thurft = cursor.fetchall();
+    cursor.execute("EXEC GetWorkSchedule @scheduleDate = '"+ str(date).split(" ")[0]+ "'");
+    thur = cursor.fetchall();
+    date += datetime.timedelta(days=1);
+    
+    cursor.execute("EXEC IsFieldTrip @scheduleDate = '"+ str(date).split(" ")[0]+ "'");
+    frift = cursor.fetchall();
+    cursor.execute("EXEC GetWorkSchedule @scheduleDate = '"+ str(date).split(" ")[0]+ "'");
+    fri = cursor.fetchall();
+    
+    return render_template("schedule.html", 
+                           monday = mon, 
+                           tuesday = tues,
+                           wednesday=wed, 
+                           thursday=thur, 
+                           friday=fri, 
+                           mft = monft,
+                           tft = tuesft,
+                           wft = wedft,
+                           hft = thurft,
+                           fft = frift)
 
 @app.route("/settings")
 def settings_page():

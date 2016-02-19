@@ -49,6 +49,39 @@
 				<p><strong>Severity:</strong> {{row["Sev"]}}</p>
 				<hr />
 				{% endfor %}
+				<div id="allgdrop" class="dropdown" style="display: none;">
+					<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="buttonText">Choose Discipline
+					<span class="caret"></span></button>
+					<ul class="dropdown-menu">
+						{% for row in allAllg %}
+						<li>
+							<a onmousedown="storeAllg('{{row["AID"]}}', '{{id}}');" id=>{{row["Description"]}}</a>
+						</li>
+						{% endfor %}
+					</ul>
+				</div>
+				
+				<form id="severity" style="display: none;">
+					<input type="radio" name="sev" value="VHigh"> Very High<br>
+					<input type="radio" name="sev" value="High"> High<br>
+					<input type="radio" name="sev" value="Medium"> Medium<br>
+					<input type="radio" name="sev" value="Low" checked=""> Low
+				</form>
+				<input type="text" placeholder="enter special instructions" id="specInstr" style="display: none;" />
+				
+				<br />
+				
+				<button onclick="attemptSaveDiscp();" id="saveDiscpButton" style="display: none;">Save</button>
+				<a id="x" style="display: none;" onmousedown="hideAdd();"> Cancel </a>
+				<a id="addAllg" onmousedown="displayAdd(addAllg);">add</a>
+				<p class="goodMessage" id="discpMessage" style="display: none;"></p>
+				<p id="algvariable" style="display: none;"></p>
+				
+				
+				
+				
+				
+				
 				
 				<h3>Discipline</h3>
 				{% for row in discipline %}
@@ -57,6 +90,7 @@
 				<p><strong>Punishment: </strong> {{row["Punishment"]}}</p>
 				<hr />
 				{% endfor %}
+				<br />
 				<div id="notHere" class="dropdown" style="display: none;">
 					<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="buttonText">Choose Discipline
 					<span class="caret"></span></button>
@@ -72,7 +106,7 @@
 				<br />
 				<button onclick="attemptSaveDiscp();" id="saveDiscpButton" style="display: none;">Save</button>
 				<a id="x" style="display: none;" onmousedown="hideAdd();"> Cancel </a>
-				<a id="addCamper" onmousedown="displayAdd();">add</a>
+				<a id="addCamper" onmousedown="displayAdd(addCamper);">add</a>
 				<p class="goodMessage" id="discpMessage" style="display: none;"></p>
 				<p id="variable" style="display: none;"></p>
 				
@@ -177,8 +211,6 @@
 			
 			var realAdd = document.getElementById("addCamper");
 			realAdd.style.display = "initial";
-			
-			
 		}
 		
 		function displayAdd() {
@@ -188,8 +220,50 @@
 			x.style.display = "initial";
 			var but = document.getElementById("saveDiscpButton");
 			but.style.display = "initial";
-			var oldAdd = document.getElementById("addCamper");
+			var oldAdd = document.getElementById(id);
 			oldAdd.style.display = "none";
+		}
+		
+		function hideAllgAdd() {
+			var not = document.getElementById("notHere");
+			not.style.display = "none";
+			
+			var button = document.getElementById("buttonText");
+			button.textContent = "Choose Discipline"
+			
+			var x = document.getElementById("x");
+			x.style.display = "none";
+			
+			var but = document.getElementById("saveDiscpButton");
+			but.style.display = "none";
+			
+			var pu = document.getElementById("punish");
+			pu.value ="";
+			pu.style.display = "none";
+			
+			var realAdd = document.getElementById("addCamper");
+			realAdd.style.display = "initial";
+		}
+		
+		function displayAllgAdd() {
+			var not = document.getElementById("notHere");
+			not.style.display = "initial";
+			var x = document.getElementById("x");
+			x.style.display = "initial";
+			var but = document.getElementById("saveDiscpButton");
+			but.style.display = "initial";
+			var oldAdd = document.getElementById(id);
+			oldAdd.style.display = "none";
+		}
+		
+		function storeAllg(aid, camperID) {
+			var variable = document.getElementById("algvariable");
+			variable.textContent = camperID + "," + counsID + "," +did;
+			
+			var button = document.getElementById("buttonText");
+			button.textContent = discp;
+			
+			showPunishment();
 		}
 	</script>
 
