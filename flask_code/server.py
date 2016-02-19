@@ -47,15 +47,14 @@ def login_user():
         username = request.form['username']
         password = request.form['password']
         
-        cursor.execute("EXEC GetUserID @username='"+username+"'")
+        cursor.execute("EXEC GetUserID @username= %s", (username,))
         id = cursor.fetchall()[0]['id']
         
         cursor.execute("EXEC GetSalt @id='"+str(id)+"'")
         salt = cursor.fetchall()[0]['Salt']
         hashedPass = bcrypt.hashpw(password.encode('utf-8'), salt.encode('utf-8'))
          
-        query = "EXEC AttemptLogin @username='"+username+"',@password='"+hashedPass+"'"
-        cursor.execute(query)
+        cursor.execute("EXEC AttemptLogin @username= %s,@password= %s", (username, hashedPass))
         results = cursor.fetchall()
         
         print results
@@ -177,7 +176,6 @@ def setSchedule_page():
                 ids = str.split(',')
                 eid = ids[0]
                 jid = ids[1]
-#                 cursor.execute("EXEC InsertSchedule @date='"+datestr+"',@eid='"+eid+"',@jid='"+jid+"'")
                 cursor.execute("EXEC InsertSchedule @date= %s,@eid= %s,@jid= %s", (datestr, eid, jid))
                 conn.commit()
         return "all good"
@@ -264,7 +262,8 @@ def setPass():
         oldSalt = cursor.fetchall()[0]['Salt']
         oldHashedPass = bcrypt.hashpw(oldPass.encode('utf-8'), oldSalt.encode('utf-8'))
         
-        cursor.execute("EXEC ChangePassword @newpass='"+newHashed+"',@newsalt='"+newSalt+"',@oldpass='"+oldHashedPass+"',@id='"+id+"',@result=''")
+        cursor.execute("EXEC ChangePassword @newpass = %s,@newsalt = %s,@oldpass= %s,@id= %s,@result=''",
+                       (newHashed, newSalt, oldHashedPass, id))
         ans = cursor.fetchall()[0]['result']
         conn.commit()
         return ans
@@ -285,13 +284,8 @@ def regUser():
         salt = str(bcrypt.gensalt())
         hashedPass = bcrypt.hashpw(password.encode('utf-8'), salt)
         
-        cursor.execute("EXEC RegisterUser @username='"+username
-                       +"',@password='"+hashedPass
-                       +"',@salt='"+salt
-                       +"',@fname='"+fname
-                       +"',@lname='"+lname
-                       +"',@isAdmin='"+isAdmin
-                       +"',@result=''")
+        cursor.execute("EXEC RegisterUser @username = %s,@password = %s,@salt = %s,@fname= %s,@lname= %s,@isAdmin= %s,@result=''", 
+                       (username, hashedPass, salt, fname, lname, isAdmin))
         ans = cursor.fetchall()[0]['result']
         conn.commit()
         return ans
@@ -319,7 +313,7 @@ def addJob():
     if request.method == 'POST':
         jname = request.form['Jname']
         time = request.form['time']
-        cursor.execute("EXEC AddJob @jname='"+jname+"',@time='"+time+"'")
+        cursor.execute("EXEC AddJob @jname= %s,@time= %s", (jname, time))
         conn.commit();
         return "all good"
     else:
@@ -340,9 +334,7 @@ def upload_page():
                 lname = row[1]
                 tribe = row[2]
                 print fname, lname, tribe
-                query = "EXEC InsertCamper @Fname='"+fname+"',@Lname='"+lname+"',@Tribe='"+tribe+"'"
-                print query
-                cursor.execute(query)
+                cursor.execute("EXEC InsertCamper @Fname = %s,@Lname = %s,@Tribe = %s", (fname, lname, tribe))
             print "all done, committing"
             conn.commit()
             return "File uploaded successfully!" # a message for the javascript callback
@@ -358,7 +350,8 @@ def camper_page(camperID):
         campID = request.form['camperID']
         eid = request.form['counsID']
         punish = request.form['punish']
-        cursor.execute("EXEC InsertDiscipline @campID='"+campID+"',@EID='"+eid+"',@DID='"+did+"',@punish='"+punish+"'");
+        cursor.execute("EXEC InsertDiscipline @campID= %s,@EID= %s,@DID= %s,@punish= %s",
+                       (campID, eid, did, punish));
         return "all good"
     else:
         cursor.execute("EXEC GetCamperInfo @id ='"+camperID+"'");
@@ -371,8 +364,35 @@ def camper_page(camperID):
         all = cursor.fetchall();
         cursor.execute("EXEC GetAllDiscipline");
         allD = cursor.fetchall();
-        return render_template("camperPage.html", basicInfo=basic, allCampers=all, allergies=allerg, discipline=discp, allDiscp=allD,id=camperID)
+        cursor.execute("EXEC GetAllAllergies");
+        allA = cursor.fetchall();
+        return render_template("camperPage.html", basicInfo=basic, allCampers=all, discipline=discp, allDiscp=allD,id=camperID, allergies=allerg, allAllg=allA)
 
+@app.route("/camperPageAllg", methods=['GET', 'POST'])
+def camperallg_page():
+    sumSessionCounter()
+    if request.method == 'POST':
+        aid = request.form['aid']
+        campID = request.form['camperID']
+        sev = request.form['severity']
+        spIn = request.form['specInst']
+        cursor.execute("EXEC InsertHasAllergy @campID= %s,@AID= %s,@ins= %s,@sev= %s",
+                       (campID, aid, spIn, sev));
+        return "all good"
+    else:
+        cursor.execute("EXEC GetCamperInfo @id ='"+camperID+"'");
+        basic = cursor.fetchall();
+        cursor.execute("EXEC GetCamperAllergies @id ='"+camperID+"'");
+        allerg = cursor.fetchall();
+        cursor.execute("EXEC GetCamperDiscipline @id ='"+camperID+"'");
+        discp = cursor.fetchall();
+        cursor.execute("EXEC GetAllCampers");
+        all = cursor.fetchall();
+        cursor.execute("EXEC GetAllDiscipline");
+        allD = cursor.fetchall();
+        cursor.execute("EXEC GetAllAllergies");
+        allA = cursor.fetchall();
+        return render_template("camperPage.html", basicInfo=basic, allCampers=all, allergies=allerg, discipline=discp, allDiscp=allD,id=camperID, allAllg=allA)
     
 @app.route("/notFound")
 def notFound_page():
