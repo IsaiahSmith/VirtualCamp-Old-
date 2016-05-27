@@ -48,7 +48,11 @@ def login_user():
         password = request.form['password']
         
         cursor.execute("EXEC GetUserID @username= %s", (username,))
-        id = cursor.fetchall()[0]['id']
+        res = cursor.fetchall()
+        if len(res) == 0:
+            print "ERROR: your username is incorrect!"
+            return render_template("login.html", message="invalid username or password")
+        id = res[0]['id']
         
         cursor.execute("EXEC GetSalt @id='"+str(id)+"'")
         salt = cursor.fetchall()[0]['Salt']
